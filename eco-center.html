@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VATAGA - Проект: Эко Центр</title> 
+    
+    <!-- Подключение оригинальных шрифтов: League Spartan и Montserrat с Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@900&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Локальное подключение Caviar Dreams (устраняет сбросы шрифта) */
+        @font-face {
+            font-family: 'Caviar Dreams';
+            src: url('fonts/CaviarDreams.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Caviar Dreams';
+            src: url('fonts/CaviarDreams_Bold.woff2') format('woff2');
+            font-weight: bold;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body { 
+            font-family: 'Caviar Dreams', 'Montserrat', sans-serif; 
+            background-color: #f7f7f7; 
+            color: #000000;            
+            overflow-x: hidden; 
+            padding-top: 120px; 
+        }
+        body.no-scroll {
+            overflow: hidden !important;
+        }
+
+        /* На ПК скрываем курсор, на мобильных оставляем стандартный */
+        @media (min-width: 769px) {
+            html, body, * { 
+                cursor: none !important; 
+                user-select: none; 
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cursor-circle {
+                display: none !important;
+            }
+        }
+
+        /* Оверлей шума */
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 900; opacity: 0.07;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Блюр заднего фона при открытии микро-меню */
+        .page-blur-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 680;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(247, 247, 247, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        body.menu-open .page-blur-overlay {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Блюр под шапкой */
+        .header-blur-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 120px;
+            z-index: 608;
+            pointer-events: none;
+            background: linear-gradient(to bottom, 
+                                rgba(247, 247, 247, 0.95) 0%,
+                                rgba(247, 247, 247, 0.95) 75%,
+                                rgba(247, 247, 247, 0.4) 90%,
+                                rgba(247, 247, 247, 0.0) 100%);
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px); 
+            mask-image: linear-gradient(to bottom, 
+                                black 0%,
+                                black 75%,
+                                rgba(0,0,0,0.6) 90%,
+                                transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, 
+                                        black 0%, 
+                                        black 75%, 
+                                        rgba(0,0,0,0.6) 90%,
+                                        transparent 100%);
+        }
+
+        /* Логотип */
+        .logo {
+            position: fixed; top: 40px; left: 50px;
+            font-family: 'League Spartan', sans-serif;
+            font-size: 32px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            color: #000000;
+            text-decoration: none;
+            z-index: 650; 
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .logo:hover {
+            color: #000000; 
+            transform: scale(1.05);
+        }
+
+        /* Меню навигации (Десктоп) */
+        nav.top-menu {
+            position: fixed; top: 40px; right: 50px;
+            display: flex; flex-direction: row; gap: 40px; 
+            z-index: 700; 
+            transition: opacity 0.3s ease;
+        }
+
+        nav.top-menu a {
+            font-family: 'Caviar Dreams', 'Montserrat', sans-serif;
+            color: #000000; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 18px; 
+            transition: color 0.3s, transform 0.3s, opacity 0.3s;
+            white-space: nowrap;
+            opacity: 0.8;
+        }
+
+        nav.top-menu a:hover {
+            color: #000000; 
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        
+        nav.top-menu a.active {
+            font-weight: bold; 
+            opacity: 1;
+        }
+
+        /* Мобильная кнопка меню (Бургер) */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 750;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 40px;
+            height: 32px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #000000;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /* Контент страницы */
+        .content-container {
+            position: relative;
+            z-index: 600; 
+            margin: 60px auto 100px auto; 
+            max-width: 1200px; 
+            padding: 0 20px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+        }
+        
+        .main-project-image-wrapper {
+            width: 100%; 
+            height: 600px; 
+            background-color: #e0e0e0; 
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            margin-bottom: 60px; 
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .main-project-image-wrapper:hover {
+            transform: scale(1.01);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.15);
+        }
+
+        .main-project-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            display: block;
+        }
+
+        .image-section-title {
+            font-family: 'Caviar Dreams', 'Montserrat', sans-serif; 
+            font-size: 1.2em; 
+            font-weight: 600; 
+            color: #000000;
+            text-align: left;
+            width: 100%; 
+            margin-bottom: 20px; 
+            margin-top: 40px; 
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 20px; 
+            width: 100%;
+            margin-bottom: 50px;
+        }
+
+        .image-grid.visualization-grid {
+            grid-template-columns: repeat(4, 1fr); 
+        }
+        
+        .image-grid-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            text-align: center;
+            background-color: #e0e0e0; 
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer; 
+            position: relative; 
+            height: 0; 
+            padding-bottom: 56.25%;
+        }
+
+        .image-grid-item img {
+            position: absolute; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            display: block;
+            transition: filter 0.3s ease; 
+        }
+
+        .image-grid-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f7f7f7;
+            opacity: 0;
+            pointer-events: none; 
+            z-index: 2; 
+            border-radius: 8px; 
+            transition: opacity 0.3s ease; 
+        }
+
+        .image-grid-item.is-fogged::before {
+            opacity: 0.85; 
+        }
+        .image-grid-item.is-fogged img {
+            filter: blur(4px);
+        }
+
+        .image-grid-item:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .project-info {
+            width: 100%;
+            max-width: 700px; 
+            text-align: left; 
+            padding: 0 10px;
+            line-height: 1.6;
+            margin-top: 60px; 
+            align-self: flex-start; 
+        }
+        
+        .project-info p {
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            color: #444444;
+            display: flex; 
+            line-height: 1.4;
+        }
+
+        .project-info p strong {
+            font-weight: 600; 
+            color: #000000;
+            min-width: 100px; 
+            margin-right: 10px;
+            transition: font-weight 0.3s ease, transform 0.3s ease; 
+        }
+        
+        .project-info p strong.active {
+            font-weight: bold;
+        }
+
+        /* Интерактивный туман */
+        .fog-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 255, 255, 0.2); 
+            backdrop-filter: blur(6px); 
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 500; 
+            pointer-events: none; 
+            mask-composite: intersect; 
+            -webkit-mask-composite: source-in;
+            transition: background 0.5s linear, backdrop-filter 0.5s linear, -webkit-backdrop-filter 0.5s linear; 
+        }
+
+        .cursor-circle { 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 20px; height: 20px; 
+            border: 2px solid #000000; border-radius: 50%; 
+            pointer-events: none; 
+            transform: translate(-50%, -50%); 
+            z-index: 999999; 
+        }
+        
+        .figure {
+            position: fixed; 
+            top: 0; left: 0; 
+            pointer-events: none;
+            z-index: 605; 
+            transition: opacity 0.5s; 
+        }
+        
+        .figure img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* Оверлей просмотра изображений (Lightbox) */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.92); 
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000; 
+            visibility: hidden; 
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .lightbox-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-image {
+            max-width: 90vw; 
+            max-height: 85vh; 
+            object-fit: contain; 
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .lightbox-close {
+            position: fixed; top: 30px; right: 35px;
+            background: none; border: none; color: #000000; 
+            font-size: 3em; cursor: pointer; z-index: 10001; 
+            line-height: 1; padding: 0;
+            transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .lightbox-close:hover {
+            transform: rotate(90deg);
+            color: #555555; 
+        }
+
+        .lightbox-nav {
+            position: fixed; top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.05); 
+            color: #000000; 
+            border: none;
+            padding: 12px 18px;
+            font-size: 2.2em;
+            cursor: pointer;
+            z-index: 10001;
+            border-radius: 50%;
+            transition: background-color 0.2s, color 0.2s;
+            line-height: 1;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .lightbox-nav:hover {
+            background: rgba(0, 0, 0, 0.15); 
+        }
+        .lightbox-nav.prev {
+            left: 25px;
+        }
+        .lightbox-nav.next {
+            right: 25px;
+        }
+        .lightbox-nav:disabled {
+            opacity: 0.3;
+            cursor: default;
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        /* --- МОБИЛЬНАЯ АДАПТАЦИЯ (Медиазапросы) --- */
+        @media (max-width: 768px) {
+            body { padding-top: 110px; }
+            .header-blur-background { height: 100px; }
+            .logo { top: 25px; left: 20px; font-size: 26px; }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            /* Компактное МИКРО-МЕНЮ справа вверху */
+            nav.top-menu {
+                position: fixed;
+                top: 70px;
+                right: 25px;
+                width: auto;
+                min-width: 180px;
+                height: auto;
+                background-color: rgba(255, 255, 255, 0.95);
+                border: 1px solid rgba(0, 0, 0, 0.08);
+                border-radius: 12px;
+                padding: 18px 22px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-end;
+                gap: 14px;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+                z-index: 700;
+            }
+
+            nav.top-menu.mobile-open {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+                pointer-events: auto !important;
+            }
+
+            nav.top-menu a {
+                font-size: 19px;
+                font-weight: bold;
+                text-align: right;
+                display: block;
+                padding: 2px 0;
+                pointer-events: auto !important;
+            }
+
+            .content-container { padding: 0 15px; margin-top: 20px; }
+            
+            .main-project-image-wrapper {
+                width: 100%; height: auto;
+                aspect-ratio: 16 / 10;
+                margin-bottom: 35px;
+            }
+            .image-section-title {
+                font-size: 1.1em;
+                margin-top: 30px; margin-bottom: 15px;
+            }
+            .image-grid.visualization-grid { grid-template-columns: repeat(2, 1fr); }
+            .image-grid-item { padding-bottom: 56.25%; }
+            .project-info {
+                max-width: 100%; padding: 0; margin-top: 40px;
+            }
+            .project-info p {
+                flex-direction: column; margin-bottom: 15px;
+            }
+            .project-info p strong {
+                min-width: auto; margin-right: 0; margin-bottom: 5px;
+            }
+            .lightbox-close { top: 15px; right: 15px; font-size: 2.2em; }
+            .lightbox-nav { width: 42px; height: 42px; font-size: 1.5em; display: flex; align-items: center; justify-content: center; padding: 0; }
+            .lightbox-nav.prev { left: 10px; }
+            .lightbox-nav.next { right: 10px; }
+        }
+
+        @media (max-width: 480px) {
+            .logo { left: 15px; font-size: 20px; }
+            nav.top-menu { right: 15px; gap: 15px; }
+            nav.top-menu a { font-size: 14px; }
+            .main-project-image-wrapper { margin-top: 40px; }
+            .image-grid.visualization-grid { grid-template-columns: 1fr; }
+            .image-grid-item { padding-bottom: 56.25%; }
+            .image-section-title {
+                font-size: 1em; margin-top: 25px; margin-bottom: 10px;
+            }
+            .project-info p { font-size: 0.9em; }
+            .lightbox-close { top: 15px; right: 15px; }
+            
+            .lightbox-nav.prev, .lightbox-nav.next { 
+                top: auto; bottom: 20px; transform: translateY(0); 
+            } 
+            .lightbox-prev { left: 20px; } 
+            .lightbox-next { right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="logo">!vataga</a>
+
+    <!-- Мобильная кнопка меню -->
+    <button class="mobile-menu-toggle" id="menuToggle" aria-label="Открыть меню">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="page-blur-overlay" id="blurOverlay"></div>
+
+    <nav class="top-menu" id="topMenu">
+        <a href="projects.html" class="active">Проекты</a> 
+        <a href="members.html">Участники</a>
+        <a href="archive.html">Архив</a> 
+        <a href="merch.html">Мерч</a> 
+        <a href="announcements.html">Анонсы</a>
+    </nav>
+    
+    <div class="header-blur-background"></div>
+
+    <div class="content-container">
+        <div class="main-project-image-wrapper" data-lightbox-gallery="naumova-ecocenter-main">
+            <img src="images/eco-center/main_project_image.jpg" data-full-src="images/eco-center/main_project_image.jpg" alt="Главное изображение проекта Эко Центр">
+        </div>
+
+        <p class="image-section-title">Визуализация проекта</p>
+        <div class="image-grid visualization-grid" data-lightbox-gallery="visualization">
+            <div class="image-grid-item" data-section="visualization" data-index="0">
+                <img src="images/eco-center/viz_01.jpg" data-full-src="images/eco-center/viz_01.jpg" alt="Визуализация 1">
+            </div>
+            <div class="image-grid-item" data-section="visualization" data-index="1">
+                <img src="images/eco-center/viz_02.jpg" data-full-src="images/eco-center/viz_02.jpg" alt="Визуализация 2">
+            </div>
+            <div class="image-grid-item" data-section="visualization" data-index="2">
+                <img src="images/eco-center/viz_03.jpg" data-full-src="images/eco-center/viz_03.jpg" alt="Визуализация 3">
+            </div>
+            <div class="image-grid-item" data-section="visualization" data-index="3">
+                <img src="images/eco-center/viz_04.jpg" data-full-src="images/eco-center/viz_04.jpg" alt="Визуализация 4">
+            </div>
+        </div>
+        
+        <div class="project-info">
+            <p><strong class="project-detail-label">Описание:</strong> <span>Концепция Эко Центра представляет собой гармоничное сочетание архитектуры и природы, создавая пространство для образования, исследований и отдыха. Основной идеей является использование устойчивых материалов и технологий, минимизация воздействия на окружающую среду и интеграция с ландшафтом. Здание спроектировано таким образом, чтобы максимизировать естественное освещение и вентиляцию, а также использовать дождевую воду и солнечную энергию.</span></p>
+            <p><strong class="project-detail-label">Команда:</strong> <span>Красник Виктория, Олейников Всеволод, Дякин Илья</span></p>
+            <p><strong class="project-detail-label">Место:</strong> <span>Москва, Испанские кварталы</span></p>
+            <p><strong class="project-detail-label">Стадия:</strong> <span>Реализация</span></p>
+            <p><strong class="project-detail-label">Год:</strong> <span>2025</span></p>
+            <p><strong class="project-detail-label">Заказчик:</strong> <span>а101</span></p>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox-overlay" id="lightboxOverlay">
+        <div class="lightbox-content">
+            <img src="" alt="" class="lightbox-image" id="lightboxImage">
+        </div>
+        <button class="lightbox-nav prev" id="lightboxPrev">‹</button>
+        <button class="lightbox-nav next" id="lightboxNext">›</button>
+        <button class="lightbox-close" id="lightboxClose">×</button>
+    </div>
+
+    <div class="fog-overlay" id="fog"></div>
+    <div class="noise-overlay"></div>
+    <div class="cursor-circle" id="circle"></div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const circle = document.getElementById('circle');
+        const fog = document.getElementById('fog');
+        const menuToggle = document.getElementById('menuToggle');
+        const topMenu = document.getElementById('topMenu');
+        const blurOverlay = document.getElementById('blurOverlay');
+        const body = document.body; 
+
+        // Оптимизация для мобильных устройств
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let clusterX = window.innerWidth / 2 + window.scrollX, clusterY = window.innerHeight / 2 + window.scrollY;
+        let time = 0; 
+        
+        let isWakingUp = true; 
+        let currentHoleRadius = 250; 
+        let targetHoleRadius = 250;
+
+        function toggleMenu() {
+            menuToggle.classList.toggle('active');
+            topMenu.classList.toggle('mobile-open');
+            body.classList.toggle('menu-open');
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        blurOverlay.addEventListener('click', toggleMenu);
+
+        if (fog) fog.classList.add('waking-up'); 
+
+        function updatePointerPosition(clientX, clientY) {
+            mouseX = clientX; 
+            mouseY = clientY;
+            if (circle) circle.style.transform = `translate(calc(${mouseX}px - 50%), calc(${mouseY}px - 50%))`;
+        }
+
+        document.addEventListener('mousemove', (e) => updatePointerPosition(e.clientX, e.clientY));
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                updatePointerPosition(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+
+        const figureImageFiles = [
+            'images/hero1.png', 'images/hero2.png', 'images/hero3.png',
+            'images/hero4.png', 'images/hero5.png', 'images/hero6.png',
+            'images/hero7.png', 'images/hero8.png'
+        ];
+        
+        // На мобильных рисуем только 5 фигурок для экономии ресурсов
+        const activeFiles = isMobile ? figureImageFiles.slice(0, 5) : figureImageFiles;
+        const figures = []; 
+
+        for (let i = 0; i < activeFiles.length; i++) {
+            const imgFileName = activeFiles[i % activeFiles.length];
+            const imgCode = `<img src="${imgFileName}" alt="fig" loading="lazy">`;
+
+            let el = document.createElement('div');
+            el.className = 'figure';
+            el.innerHTML = imgCode; 
+            document.body.appendChild(el); 
+
+            let size = 25 + Math.random() * 20; 
+            el.style.width = size + 'px'; el.style.height = size + 'px';
+            let baseOpacity = 0.5 + Math.random() * 0.5; 
+            el.style.opacity = baseOpacity;
+
+            figures.push({
+                element: el,
+                x: Math.random() * window.innerWidth + window.scrollX, 
+                y: Math.random() * window.innerHeight + window.scrollY,
+                offsetX: (Math.random() - 0.5) * 40, 
+                offsetY: (Math.random() - 0.5) * 40,
+                speed: 0.03 + Math.random() * 0.03, 
+                jumpPhase: Math.random() * Math.PI * 2,
+                state: 'follow', 
+                dropX: 0, 
+                dropY: 0,
+                baseOpacity: baseOpacity,
+                direction: 1,
+                claimedItemTitle: null 
+            });
+        }
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target.closest('a') || e.target.closest('button') || 
+                e.target.closest('.image-grid-item') || 
+                e.target.closest('.main-project-image-wrapper') || e.target.closest('.mobile-menu-toggle') || e.target.closest('nav.top-menu')) 
+            {
+                return; 
+            }
+
+            let targetItemTitle = null;
+            const detailLabel = e.target.closest('.project-info p strong'); 
+            if (detailLabel) {
+                targetItemTitle = detailLabel; 
+            } 
+
+            let followers = figures.filter(f => f.state === 'follow');
+            if (followers.length > 0) {
+                let randomFig = followers[Math.floor(Math.random() * followers.length)];
+                
+                randomFig.state = 'dropped';
+                randomFig.dropX = e.clientX + window.scrollX; 
+                randomFig.dropY = e.clientY + window.scrollY;
+                randomFig.element.style.opacity = 1; 
+
+                if (targetItemTitle) {
+                    targetItemTitle.classList.add('active');
+                    randomFig.claimedItemTitle = targetItemTitle; 
+                }
+
+                setTimeout(() => {
+                    randomFig.state = 'follow'; 
+                    randomFig.element.style.opacity = randomFig.baseOpacity; 
+                    
+                    if (randomFig.claimedItemTitle) {
+                        randomFig.claimedItemTitle.classList.remove('active');
+                        randomFig.claimedItemTitle = null; 
+                    }
+                }, 4000 + Math.random() * 2000); 
+            }
+        });
+
+        // Контроль фокуса вкладки для сохранения ресурсов батареи
+        let rafId = null;
+        let isTabVisible = true;
+        document.addEventListener('visibilitychange', () => {
+            isTabVisible = document.visibilityState === 'visible';
+            if (isTabVisible && rafId === null) {
+                rafId = requestAnimationFrame(animate);
+            }
+        });
+
+        function animate() {
+            time += 0.08; 
+            currentHoleRadius += (targetHoleRadius - currentHoleRadius) * 0.05;
+
+            let targetClusterX = mouseX + window.scrollX;
+            let targetClusterY = mouseY + window.scrollY;
+
+            let dx = targetClusterX - clusterX;
+            let dy = targetClusterY - clusterY;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > 0) {
+                const clusterOffset = 35;
+                clusterX += (targetClusterX - (dx / dist) * clusterOffset - clusterX) * 0.4;
+                clusterY += (targetClusterY - (dy / dist) * clusterOffset - clusterY) * 0.4;
+            }
+
+            let maskLayers = [];
+            if (currentHoleRadius > 1) {
+                maskLayers.push(`radial-gradient(circle ${currentHoleRadius}px at ${mouseX}px ${mouseY}px, transparent 0%, transparent 15%, rgba(0,0,0,0.6) 45%, black 100%)`);
+            } else {
+                maskLayers.push(`linear-gradient(black, black)`); 
+            }
+
+            figures.forEach(fig => {
+                let oldX = fig.x; 
+
+                if (fig.state === 'follow') {
+                    let targetFigX = clusterX + fig.offsetX;
+                    let targetFigY = clusterY + fig.offsetY;
+
+                    fig.x += (targetFigX - fig.x) * fig.speed;
+                    fig.y += (targetFigY - fig.y) * fig.speed;
+                    
+                    fig.element.style.position = 'fixed'; 
+                    let viewportX = fig.x - window.scrollX;
+                    let viewportY = fig.y - window.scrollY;
+                    
+                    // Деликатное покачивание 4px вместо 25px
+                    let bounceY = (isWakingUp && !prefersReducedMotion) ? Math.sin(time + fig.jumpPhase) * 4 : 0; 
+                    fig.element.style.transform = `translate(calc(${viewportX}px - 50%), calc(${viewportY + bounceY}px - 50%)) scaleX(${fig.direction})`;
+
+                } else {
+                    let targetFigX = fig.dropX; 
+                    let targetFigY = fig.dropY;
+
+                    fig.x += (targetFigX - fig.x) * fig.speed; 
+                    fig.y += (targetFigY - fig.y) * fig.speed;
+                    
+                    fig.element.style.position = 'absolute'; 
+                    fig.element.style.transform = `translate(calc(${fig.x}px - 50%), calc(${fig.y}px - 50%)) scaleX(${fig.direction})`;
+
+                    maskLayers.push(`radial-gradient(circle 350px at ${fig.x - window.scrollX}px ${fig.y - window.scrollY}px, transparent 0%, transparent 50%, rgba(0,0,0,0.3) 75%, black 100%)`);
+                }
+
+                let deltaX = fig.x - oldX;
+                if (Math.abs(deltaX) > 0.3) fig.direction = deltaX > 0 ? 1 : -1;
+            });
+
+            if (fog) {
+                let maskString = maskLayers.join(', ');
+                fog.style.webkitMaskImage = maskString;
+                fog.style.maskImage = maskString;
+            }
+
+            rafId = requestAnimationFrame(animate);
+        }
+        
+        rafId = requestAnimationFrame(animate);
+
+        // --- Lightbox-галерея ---
+        const imageGridItems = document.querySelectorAll('.image-grid-item');
+        const mainProjectImageWrapper = document.querySelector('.main-project-image-wrapper');
+        const lightboxOverlay = document.getElementById('lightboxOverlay');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxPrev = document.getElementById('lightboxPrev');
+        const lightboxNext = document.getElementById('lightboxNext');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        let allSectionImages = {
+            naumova_ecocenter_main: [],
+            visualization: []
+        };
+        let currentActiveSection = '';
+        let currentImageIndex = 0;
+
+        if (mainProjectImageWrapper && mainProjectImageWrapper.querySelector('img')) {
+            const img = mainProjectImageWrapper.querySelector('img');
+            allSectionImages.naumova_ecocenter_main.push({
+                src: img.dataset.fullSrc || img.src,
+                alt: img.alt
+            });
+            mainProjectImageWrapper.addEventListener('click', () => {
+                openLightbox('naumova_ecocenter_main', 0);
+            });
+        }
+
+        document.querySelectorAll('.image-grid-item').forEach(item => {
+            const section = item.dataset.section;
+            if (section && allSectionImages[section]) {
+                allSectionImages[section].push({
+                    src: item.querySelector('img').dataset.fullSrc || item.querySelector('img').src,
+                    alt: item.querySelector('img').alt
+                });
+            }
+        });
+
+        function showLightboxImage(index) {
+            const images = allSectionImages[currentActiveSection];
+            if (!images || images.length === 0) return;
+
+            if (index >= images.length) {
+                currentImageIndex = 0; 
+            } else if (index < 0) {
+                currentImageIndex = images.length - 1; 
+            } else {
+                currentImageIndex = index;
+            }
+
+            lightboxImage.src = images[currentImageIndex].src;
+            lightboxImage.alt = images[currentImageIndex].alt;
+
+            lightboxPrev.disabled = images.length <= 1;
+            lightboxNext.disabled = images.length <= 1;
+        }
+
+        function openLightbox(section, index) {
+            currentActiveSection = section;
+            lightboxOverlay.classList.add('active');
+            body.classList.add('no-scroll'); 
+            showLightboxImage(index);
+        }
+
+        function closeLightbox() {
+            lightboxOverlay.classList.remove('active');
+            body.classList.remove('no-scroll'); 
+            currentActiveSection = ''; 
+            lightboxImage.src = ''; 
+        }
+
+        imageGridItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                const section = item.dataset.section;
+                const index = parseInt(item.dataset.index);
+                openLightbox(section, index);
+            });
+        });
+
+        lightboxPrev.addEventListener('click', () => showLightboxImage(currentImageIndex - 1));
+        lightboxNext.addEventListener('click', () => showLightboxImage(currentImageIndex + 1));
+        lightboxClose.addEventListener('click', closeLightbox);
+
+        lightboxOverlay.addEventListener('click', (e) => {
+            if (e.target === lightboxOverlay) { 
+                closeLightbox();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (lightboxOverlay.classList.contains('active')) {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowLeft') {
+                    if(!lightboxPrev.disabled) showLightboxImage(currentImageIndex - 1);
+                } else if (e.key === 'ArrowRight') {
+                    if(!lightboxNext.disabled) showLightboxImage(currentImageIndex + 1);
+                }
+            }
+        });
+
+        // Затуманивание изображений в сетке
+        const allFoggedItems = [...document.querySelectorAll('.image-grid-item')];
+        allFoggedItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                const parentGrid = item.closest('.image-grid');
+                if (parentGrid) {
+                    Array.from(parentGrid.children).forEach(otherItem => { 
+                        if (otherItem !== item) otherItem.classList.add('is-fogged');
+                    });
+                }
+            });
+            item.addEventListener('mouseleave', () => {
+                const parentGrid = item.closest('.image-grid');
+                if (parentGrid) {
+                    Array.from(parentGrid.children).forEach(otherItem => {
+                        otherItem.classList.remove('is-fogged'); 
+                    });
+                }
+            });
+        });
+    }); 
+    </script>
+</body>
+</html>
