@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>VATAGA - Архив</title>
+
+<!-- Подключение оригинальных шрифтов -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@900&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/caviar-dreams" rel="stylesheet">
+<link rel="stylesheet" href="css/fonts.css">
+
+<style>
+@font-face {
+    font-family: 'Caviar Dreams';
+    src: url('fonts/CaviarDreams.woff2') format('woff2'),
+         url('https://fonts.cdnfonts.com/s/14299/CaviarDreams.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Caviar Dreams';
+    src: url('fonts/CaviarDreams_Bold.woff2') format('woff2'),
+         url('https://fonts.cdnfonts.com/s/14299/CaviarDreams_Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body { 
+    margin: 0; 
+    padding: 0; 
+    width: 100%;
+}
+
+body { 
+    font-family: 'Caviar Dreams', sans-serif; 
+    background-color: #f7f7f7; 
+    color: #000000; 
+    overflow-x: hidden; 
+    padding-top: 150px; 
+}
+
+body.no-scroll { 
+    overflow: hidden !important; 
+}
+
+@media (min-width: 769px) {
+    html, body, * { 
+        cursor: none !important; 
+        user-select: none; 
+    }
+}
+
+@media (max-width: 768px) {
+    .cursor-circle {
+        display: none !important;
+    }
+}
+
+.noise-overlay { 
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+    pointer-events: none; z-index: 900; opacity: 0.07; 
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); 
+}
+
+.header-blur-background { 
+    position: fixed; top: 0; left: 0; width: 100vw; height: 130px; 
+    z-index: 608; pointer-events: none; 
+    background: linear-gradient(to bottom, rgba(247, 247, 247, 0.95) 0%, rgba(247, 247, 247, 0.95) 75%, rgba(247, 247, 247, 0.4) 90%, rgba(247, 247, 247, 0.0) 100%); 
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); 
+    mask-image: linear-gradient(to bottom, black 0%, black 75%, rgba(0,0,0,0.6) 90%, transparent 100%); 
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 75%, rgba(0,0,0,0.6) 90%, transparent 100%); 
+}
+
+.logo { 
+    position: fixed; top: 40px; left: 50px; 
+    font-family: 'League Spartan', sans-serif; 
+    font-size: 32px; font-weight: 900; 
+    text-transform: uppercase; color: #000000; 
+    text-decoration: none; z-index: 650; 
+    transition: color 0.3s, transform 0.3s; 
+}
+
+.logo:hover { 
+    color: #000000; 
+    transform: scale(1.05); 
+}
+
+nav.top-menu { 
+    position: fixed; top: 40px; right: 50px; 
+    display: flex; flex-direction: row; gap: 40px; 
+    z-index: 650; 
+    transition: opacity 0.3s ease;
+}
+
+nav.top-menu a { 
+    color: #000000; text-decoration: none; 
+    font-weight: bold; font-size: 18px; 
+    transition: color 0.3s, transform 0.3s; 
+    white-space: nowrap;
+}
+
+nav.top-menu a:hover { 
+    color: #000000; transform: scale(1.05); 
+}
+
+nav.top-menu a.active { 
+    font-weight: 900; 
+}
+
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    z-index: 700;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 40px;
+    height: 32px;
+}
+
+.mobile-menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #000000;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.mobile-menu-toggle.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+}
+.mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+.mobile-menu-toggle.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+}
+
+.content-container { 
+    position: relative; z-index: 600; 
+    margin: 20px auto 100px 50px; 
+    max-width: 1200px; padding-right: 50px; 
+    display: flex; flex-direction: column; 
+    align-items: flex-start; 
+}
+
+.section-title { 
+    font-family: 'Caviar Dreams', sans-serif; 
+    font-size: 2.2em; font-weight: normal; 
+    color: #000000; text-align: left; 
+    width: 100%; margin-bottom: 30px; margin-top: 0; 
+}
+
+.photo-carousels-container { width: 100%; margin-top: 10px; max-width: 1100px; margin-right: auto; }
+.photo-carousel-section { margin-bottom: 50px; display: flex; flex-direction: column; }
+.photo-carousel-section:last-of-type { margin-bottom: 0; }
+.photo-carousel-title { font-family: 'Caviar Dreams', sans-serif; font-size: 1.1em; font-weight: 600; color: #000000; margin-top: 12px; margin-bottom: 0; padding-left: 2px; }
+.photo-carousel-container { position: relative; }
+
+.photo-carousel-scroll-wrapper { 
+    display: flex; overflow-x: auto; 
+    -webkit-overflow-scrolling: touch; 
+    scroll-snap-type: x mandatory; 
+    gap: 15px; padding-bottom: 15px; 
+    cursor: grab; 
+}
+.photo-carousel-scroll-wrapper.grabbing { cursor: grabbing; }
+.photo-carousel-scroll-wrapper::-webkit-scrollbar { display: none; }
+.photo-carousel-scroll-wrapper { -ms-overflow-style: none; scrollbar-width: none; }
+
+.carousel-image-item { 
+    flex-shrink: 0; width: 280px; height: 180px; 
+    border-radius: 8px; overflow: hidden; 
+    background-color: #e0e0e0; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); 
+    scroll-snap-align: start; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+}
+.carousel-image-item img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.carousel-image-item:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
+
+.carousel-nav-btn { 
+    position: absolute; top: 50%; transform: translateY(-50%); 
+    z-index: 10; background-color: rgba(255, 255, 255, 0.85); 
+    border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 50%; 
+    width: 40px; height: 40px; display: flex; justify-content: center; 
+    align-items: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+    transition: all 0.2s ease; opacity: 0; pointer-events: none; 
+    cursor: pointer !important; 
+}
+.photo-carousel-container:hover .carousel-nav-btn { opacity: 1; pointer-events: all; }
+.carousel-nav-btn:hover { background-color: white; transform: translateY(-50%) scale(1.1); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); }
+.carousel-nav-btn.carousel-prev { left: -20px; }
+.carousel-nav-btn.carousel-next { right: -20px; }
+.carousel-nav-btn svg { width: 20px; height: 20px; stroke: #000; }
+
+/* Оверлей просмотра изображений (Lightbox) */
+.lightbox-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(15, 15, 15, 0.92);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 10000; visibility: hidden; opacity: 0;
+    transition: visibility 0s 0.3s, opacity 0.3s ease;
+}
+.lightbox-overlay.active {
+    visibility: visible; opacity: 1;
+    transition: visibility 0s, opacity 0.3s ease;
+}
+
+.lightbox-content {
+    position: relative; display: flex;
+    justify-content: center; align-items: center;
+    max-width: 90vw; max-height: 85vh;
+}
+.lightbox-image {
+    max-width: 100%; max-height: 85vh;
+    display: block; box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    border-radius: 6px; object-fit: contain;
+}
+
+.lightbox-nav, .lightbox-close {
+    position: fixed;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 50%; color: white;
+    font-size: 2em; cursor: pointer !important;
+    width: 50px; height: 50px;
+    display: flex; justify-content: center; align-items: center;
+    top: 50%; transform: translateY(-50%);
+    transition: all 0.2s ease; z-index: 10001;
+    -webkit-tap-highlight-color: transparent;
+}
+.lightbox-nav:hover, .lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+.lightbox-close {
+    top: 25px; right: 25px;
+    width: 42px; height: 42px;
+    font-size: 1.5em; transform: none; line-height: 1;
+}
+.lightbox-close:hover {
+    transform: scale(1.1) rotate(90deg);
+}
+.lightbox-prev { left: 25px; }
+.lightbox-next { right: 25px; }
+
+.fog-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 500; pointer-events: none; mask-composite: intersect; -webkit-mask-composite: source-in; transition: background 0.5s linear, backdrop-filter 0.5s linear, -webkit-backdrop-filter 0.5s linear; }
+.fog-overlay.waking-up { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.cursor-circle { position: fixed; top: 0; left: 0; width: 20px; height: 20px; border: 2px solid #000000; border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); z-index: 999999; }
+.figure { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 605; transition: opacity 0.5s; }
+.figure img { width: 100%; height: 100%; object-fit: contain; }
+
+/* МОБИЛЬНАЯ АДАПТАЦИЯ */
+@media (max-width: 900px) { 
+    .photo-carousels-container { max-width: 100%; } 
+    .carousel-image-item { width: 230px; height: 150px; } 
+    .carousel-nav-btn { display: none; } 
+}
+
+@media (max-width: 768px) { 
+    body { padding-top: 110px; } 
+    .header-blur-background { height: 100px; } 
+    
+    .logo { top: 25px; left: 20px; font-size: 26px; } 
+
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    nav.top-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(247, 247, 247, 0.98);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 600;
+    }
+
+    nav.top-menu.mobile-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto !important;
+    }
+
+    nav.top-menu a { font-size: 24px; } 
+
+    .content-container { 
+        padding: 0 20px; 
+        margin: 20px auto 60px 0; 
+        width: 100%;
+    } 
+
+    .section-title { font-size: 1.8em; margin-bottom: 20px; } 
+    .photo-carousels-container { margin-top: 20px; } 
+    .photo-carousel-section { margin-bottom: 35px; } 
+    .photo-carousel-title { font-size: 0.95em; margin-top: 8px; } 
+    .carousel-image-item { width: 210px; height: 135px; } 
+    
+    .lightbox-nav { width: 44px; height: 44px; font-size: 1.5em; }
+    .lightbox-prev { left: 10px; } 
+    .lightbox-next { right: 10px; } 
+    .lightbox-close { top: 15px; right: 15px; width: 38px; height: 38px; font-size: 1.2em; } 
+}
+
+@media (max-width: 480px) { 
+    .section-title { font-size: 1.5em; } 
+    .carousel-image-item { width: 170px; height: 110px; } 
+    .lightbox-prev, .lightbox-next { 
+        width: 40px; height: 40px; font-size: 1.3em; 
+        top: auto; bottom: 20px; transform: translateY(0); 
+    } 
+    .lightbox-prev { left: 20px; } 
+    .lightbox-next { right: 20px; } 
+    .lightbox-close { top: 15px; right: 15px; width: 36px; height: 36px; } 
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="logo">!vataga</a>
+
+<!-- Кнопка мобильного меню -->
+<button class="mobile-menu-toggle" id="menuToggle" aria-label="Открыть меню">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
+<nav class="top-menu" id="topMenu">
+    <a href="projects.html">Проекты</a>
+    <a href="members.html">Участники</a>
+    <a href="archive.html" class="active">Архив</a>
+    <a href="merch.html">Мерч</a>
+    <a href="announcements.html">Анонсы</a>
+</nav>
+
+<div class="header-blur-background"></div>
+
+<div class="content-container">
+    <p class="section-title">Фотоархив</p>
+
+    <div class="photo-carousels-container">
+
+        <div class="photo-carousel-section" data-carousel-id="carousel1">
+            <div class="photo-carousel-container">
+                <button class="carousel-nav-btn carousel-prev"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <div class="photo-carousel-scroll-wrapper">
+                    <div class="carousel-image-item"><img src="images/archive/workshop-modeling/workshop-modeling-01.jpg" data-src="images/archive/workshop-modeling/workshop-modeling-01.jpg" alt="Фото с воркшопа 1"></div>
+                    <div class="carousel-image-item"><img src="images/archive/workshop-modeling/workshop-modeling-02.jpg" data-src="images/archive/workshop-modeling/workshop-modeling-02.jpg" alt="Фото с воркшопа 2"></div>
+                    <div class="carousel-image-item"><img src="images/archive/workshop-modeling/workshop-modeling-03.jpg" data-src="images/archive/workshop-modeling/workshop-modeling-03.jpg" alt="Фото с воркшопа 3"></div>
+                    <div class="carousel-image-item"><img src="images/archive/workshop-modeling/workshop-modeling-04.jpg" data-src="images/archive/workshop-modeling/workshop-modeling-04.jpg" alt="Фото с воркшопа 4"></div>
+                    <div class="carousel-image-item"><img src="images/archive/workshop-modeling/workshop-modeling-05.jpg" data-src="images/archive/workshop-modeling/workshop-modeling-05.jpg" alt="Фото с воркшопа 5"></div>
+                    <div class="carousel-image-item"><img src="images/archive/workshop-modeling/workshop-modeling-06.jpg" data-src="images/archive/workshop-modeling/workshop-modeling-06.jpg" alt="Фото с воркшопа 6"></div>
+                    <div class="carousel-image-item"><img src="images/archive/workshop-modeling/workshop-modeling-07.jpg" data-src="images/archive/workshop-modeling/workshop-modeling-07.jpg" alt="Фото с воркшопа 7"></div>
+                    <div class="carousel-image-item"><img src="images/archive/workshop-modeling/workshop-modeling-08.jpg" data-src="images/archive/workshop-modeling/workshop-modeling-08.jpg" alt="Фото с воркшопа 8"></div>
+                    <div class="carousel-image-item"><img src="images/archive/workshop-modeling/workshop-modeling-09.jpg" data-src="images/archive/workshop-modeling/workshop-modeling-09.jpg" alt="Фото с воркшопа 9"></div>
+                    <div class="carousel-image-item"><img src="images/archive/workshop-modeling/workshop-modeling-10.jpg" data-src="images/archive/workshop-modeling/workshop-modeling-10.jpg" alt="Фото с воркшопа 10"></div>
+                </div>
+                <button class="carousel-nav-btn carousel-next"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18L15 12L9 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+            <p class="photo-carousel-title">Фото с выставки "АРХ Москва 2025"</p>
+        </div>
+
+        <div class="photo-carousel-section" data-carousel-id="carousel2">
+            <div class="photo-carousel-container">
+                <button class="carousel-nav-btn carousel-prev"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <div class="photo-carousel-scroll-wrapper">
+                    <div class="carousel-image-item"><img src="images/archive/lecture-visualization/lecture-visualization-01.jpg" data-src="images/archive/lecture-visualization/lecture-visualization-01.jpg" alt="Vis 1"></div>
+                    <div class="carousel-image-item"><img src="images/archive/lecture-visualization/lecture-visualization-02.jpg" data-src="images/archive/lecture-visualization/lecture-visualization-02.jpg" alt="Vis 2"></div>
+                    <div class="carousel-image-item"><img src="images/archive/lecture-visualization/lecture-visualization-03.jpg" data-src="images/archive/lecture-visualization/lecture-visualization-03.jpg" alt="Vis 3"></div>
+                    <div class="carousel-image-item"><img src="images/archive/lecture-visualization/lecture-visualization-04.jpg" data-src="images/archive/lecture-visualization/lecture-visualization-04.jpg" alt="Vis 4"></div>
+                    <div class="carousel-image-item"><img src="images/archive/lecture-visualization/lecture-visualization-05.jpg" data-src="images/archive/lecture-visualization/lecture-visualization-05.jpg" alt="Vis 5"></div>
+                    <div class="carousel-image-item"><img src="images/archive/lecture-visualization/lecture-visualization-06.jpg" data-src="images/archive/lecture-visualization/lecture-visualization-06.jpg" alt="Vis 6"></div>
+                    <div class="carousel-image-item"><img src="images/archive/lecture-visualization/lecture-visualization-07.jpg" data-src="images/archive/lecture-visualization/lecture-visualization-07.jpg" alt="Vis 7"></div>
+                    <div class="carousel-image-item"><img src="images/archive/lecture-visualization/lecture-visualization-08.jpg" data-src="images/archive/lecture-visualization/lecture-visualization-08.jpg" alt="Vis 8"></div>
+                </div>
+                <button class="carousel-nav-btn carousel-next"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18L15 12L9 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+            <p class="photo-carousel-title">Фото с воркшопа "Smart Glass"</p>
+        </div>
+
+        <div class="photo-carousel-section" data-carousel-id="carousel3">
+            <div class="photo-carousel-container">
+                <button class="carousel-nav-btn carousel-prev"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <div class="photo-carousel-scroll-wrapper">
+                    <div class="carousel-image-item"><img src="images/archive/portfolio-review/portfolio-review-01.jpg" data-src="images/archive/portfolio-review/portfolio-review-01.jpg" alt="PR 1"></div>
+                    <div class="carousel-image-item"><img src="images/archive/portfolio-review/portfolio-review-02.jpg" data-src="images/archive/portfolio-review/portfolio-review-02.jpg" alt="PR 2"></div>
+                    <div class="carousel-image-item"><img src="images/archive/portfolio-review/portfolio-review-03.jpg" data-src="images/archive/portfolio-review/portfolio-review-03.jpg" alt="PR 3"></div>
+                    <div class="carousel-image-item"><img src="images/archive/portfolio-review/portfolio-review-04.jpg" data-src="images/archive/portfolio-review/portfolio-review-04.jpg" alt="PR 4"></div>
+                    <div class="carousel-image-item"><img src="images/archive/portfolio-review/portfolio-review-05.jpg" data-src="images/archive/portfolio-review/portfolio-review-05.jpg" alt="PR 5"></div>
+                    <div class="carousel-image-item"><img src="images/archive/portfolio-review/portfolio-review-06.jpg" data-src="images/archive/portfolio-review/portfolio-review-06.jpg" alt="PR 6"></div>
+                    <div class="carousel-image-item"><img src="images/archive/portfolio-review/portfolio-review-07.jpg" data-src="images/archive/portfolio-review/portfolio-review-07.jpg" alt="PR 7"></div>
+                    <div class="carousel-image-item"><img src="images/archive/portfolio-review/portfolio-review-08.jpg" data-src="images/archive/portfolio-review/portfolio-review-08.jpg" alt="PR 8"></div>
+                </div>
+                <button class="carousel-nav-btn carousel-next"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18L15 12L9 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+            <p class="photo-carousel-title">Фото с цикла лекций "Красная ступень"</p>
+        </div>
+
+        <div class="photo-carousel-section" data-carousel-id="carousel4">
+            <div class="photo-carousel-container">
+                <button class="carousel-nav-btn carousel-prev"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <div class="photo-carousel-scroll-wrapper">
+                    <div class="carousel-image-item"><img src="images/archive/core-meeting/core-meeting-01.jpg" data-src="images/archive/core-meeting/core-meeting-01.jpg" alt="Core 1"></div>
+                    <div class="carousel-image-item"><img src="images/archive/core-meeting/core-meeting-02.jpg" data-src="images/archive/core-meeting/core-meeting-02.jpg" alt="Core 2"></div>
+                    <div class="carousel-image-item"><img src="images/archive/core-meeting/core-meeting-03.jpg" data-src="images/archive/core-meeting/core-meeting-03.jpg" alt="Core 3"></div>
+                    <div class="carousel-image-item"><img src="images/archive/core-meeting/core-meeting-04.jpg" data-src="images/archive/core-meeting/core-meeting-04.jpg" alt="Core 4"></div>
+                    <div class="carousel-image-item"><img src="images/archive/core-meeting/core-meeting-05.jpg" data-src="images/archive/core-meeting/core-meeting-05.jpg" alt="Core 5"></div>
+                    <div class="carousel-image-item"><img src="images/archive/core-meeting/core-meeting-06.jpg" data-src="images/archive/core-meeting/core-meeting-06.jpg" alt="Core 6"></div>
+                    <div class="carousel-image-item"><img src="images/archive/core-meeting/core-meeting-07.jpg" data-src="images/archive/core-meeting/core-meeting-07.jpg" alt="Core 7"></div>
+                    <div class="carousel-image-item"><img src="images/archive/core-meeting/core-meeting-08.jpg" data-src="images/archive/core-meeting/core-meeting-08.jpg" alt="Core 8"></div>
+                </div>
+                <button class="carousel-nav-btn carousel-next"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18L15 12L9 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+            <p class="photo-carousel-title">Фото со встреч-знакомств с архитектурными бюро</p>
+        </div>
+
+        <div class="photo-carousel-section" data-carousel-id="carousel5">
+            <div class="photo-carousel-container">
+                <button class="carousel-nav-btn carousel-prev"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <div class="photo-carousel-scroll-wrapper">
+                    <div class="carousel-image-item"><img src="images/archive/arch-music-performance/arch-music-performance-01.jpg" data-src="images/archive/arch-music-performance/arch-music-performance-01.jpg" alt="Perf 1"></div>
+                    <div class="carousel-image-item"><img src="images/archive/arch-music-performance/arch-music-performance-02.jpg" data-src="images/archive/arch-music-performance/arch-music-performance-02.jpg" alt="Perf 2"></div>
+                    <div class="carousel-image-item"><img src="images/archive/arch-music-performance/arch-music-performance-03.jpg" data-src="images/archive/arch-music-performance/arch-music-performance-03.jpg" alt="Perf 3"></div>
+                    <div class="carousel-image-item"><img src="images/archive/arch-music-performance/arch-music-performance-04.jpg" data-src="images/archive/arch-music-performance/arch-music-performance-04.jpg" alt="Perf 4"></div>
+                    <div class="carousel-image-item"><img src="images/archive/arch-music-performance/arch-music-performance-05.jpg" data-src="images/archive/arch-music-performance/arch-music-performance-05.jpg" alt="Perf 5"></div>
+                    <div class="carousel-image-item"><img src="images/archive/arch-music-performance/arch-music-performance-06.jpg" data-src="images/archive/arch-music-performance/arch-music-performance-06.jpg" alt="Perf 6"></div>
+                </div>
+                <button class="carousel-nav-btn carousel-next"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18L15 12L9 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+            <p class="photo-carousel-title">Фото с лекций в бюро Core</p>
+        </div>
+
+    </div>
+</div>
+
+<div class="fog-overlay" id="fog"></div>
+<div class="noise-overlay"></div>
+<div class="cursor-circle" id="circle"></div>
+
+<!-- Оверлей просмотра изображений -->
+<div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">×</button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev">‹</button>
+    
+    <div class="lightbox-content">
+        <img class="lightbox-image" id="lightboxImage" src="" alt="Full size image">
+    </div>
+
+    <button class="lightbox-nav lightbox-next" id="lightboxNext">›</button>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const circle = document.getElementById('circle');
+    const fog = document.getElementById('fog');
+    const body = document.body;
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const menuToggle = document.getElementById('menuToggle');
+    const topMenu = document.getElementById('topMenu');
+    
+    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+    let clusterX = window.innerWidth / 2 + window.scrollX, clusterY = window.innerHeight / 2 + window.scrollY;
+    let time = 0;
+    let isWakingUp = true;
+    let currentHoleRadius = 250;
+    let targetHoleRadius = 250;
+
+    menuToggle.addEventListener('click', () => {
+        menuToggle.classList.toggle('active');
+        topMenu.classList.toggle('mobile-open');
+    });
+
+    if (fog) fog.classList.add('waking-up'); 
+    
+    function updatePointerPosition(clientX, clientY) {
+        mouseX = clientX; 
+        mouseY = clientY;
+        if(circle) circle.style.transform = `translate(calc(${mouseX}px - 50%), calc(${mouseY}px - 50%))`;
+    }
+
+    document.addEventListener('mousemove', (e) => updatePointerPosition(e.clientX, e.clientY));
+    document.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+            updatePointerPosition(e.touches[0].clientX, e.touches[0].clientY);
+        }
+    }, { passive: true });
+
+    const figureImageFiles = [
+        'images/hero1.png', 'images/hero2.png', 'images/hero3.png',
+        'images/hero4.png', 'images/hero5.png', 'images/hero6.png',
+        'images/hero7.png', 'images/hero8.png'
+    ];
+    const figuresCount = figureImageFiles.length; 
+    const figures = []; 
+
+    for (let i = 0; i < figuresCount; i++) {
+        const imgFileName = figureImageFiles[i % figureImageFiles.length];
+        const imgCode = `<img src="${imgFileName}" alt="fig">`;
+
+        let el = document.createElement('div');
+        el.className = 'figure';
+        el.innerHTML = imgCode; 
+        document.body.appendChild(el); 
+        let size = 25 + Math.random() * 20; 
+        el.style.width = size + 'px'; el.style.height = size + 'px';
+        let baseOpacity = 0.5 + Math.random() * 0.5; 
+        el.style.opacity = baseOpacity;
+        figures.push({ element: el, x: Math.random() * window.innerWidth + window.scrollX, y: Math.random() * window.innerHeight + window.scrollY, offsetX: (Math.random() - 0.5) * 40, offsetY: (Math.random() - 0.5) * 40, speed: 0.03 + Math.random() * 0.03, jumpPhase: Math.random() * Math.PI * 2, state: 'follow', dropX: 0, dropY: 0, baseOpacity: baseOpacity, direction: 1, claimedItemTitle: null });
+    }
+
+    function handleDropInteraction(clientX, clientY, target) {
+        if (target.closest('a, button, .lightbox-overlay, .carousel-image-item, .carousel-nav-btn, .mobile-menu-toggle')) return;
+        let followers = figures.filter(f => f.state === 'follow');
+        if (followers.length > 0) {
+            let randomFig = followers[Math.floor(Math.random() * followers.length)];
+            randomFig.state = 'dropped';
+            randomFig.dropX = clientX + window.scrollX; 
+            randomFig.dropY = clientY + window.scrollY;
+            randomFig.element.style.opacity = 1; 
+            setTimeout(() => {
+                randomFig.state = 'follow'; 
+                randomFig.element.style.opacity = randomFig.baseOpacity; 
+            }, 4000 + Math.random() * 2000); 
+        }
+    }
+
+    document.addEventListener('mousedown', (e) => handleDropInteraction(e.clientX, e.clientY, e.target));
+
+    function animate() {
+        time += 0.08; 
+        currentHoleRadius += (targetHoleRadius - currentHoleRadius) * 0.05;
+        let targetClusterX = mouseX + window.scrollX; 
+        let targetClusterY = mouseY + window.scrollY;
+        
+        let dx = targetClusterX - clusterX;
+        let dy = targetClusterY - clusterY;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > 0) {
+            const clusterOffset = 35;
+            clusterX += (targetClusterX - (dx / dist) * clusterOffset - clusterX) * 0.4;
+            clusterY += (targetClusterY - (dy / dist) * clusterOffset - clusterY) * 0.4;
+        }
+
+        let maskLayers = [];
+        if (currentHoleRadius > 1) {
+            maskLayers.push(`radial-gradient(circle ${currentHoleRadius}px at ${mouseX}px ${mouseY}px, transparent 0%, transparent 15%, rgba(0,0,0,0.6) 45%, black 100%)`);
+        } else {
+            maskLayers.push(`linear-gradient(black, black)`); 
+        }
+
+        figures.forEach(fig => {
+            let oldX = fig.x; 
+            if (fig.state === 'follow') {
+                let targetFigX = clusterX + fig.offsetX; 
+                let targetFigY = clusterY + fig.offsetY;
+                fig.x += (targetFigX - fig.x) * fig.speed;
+                fig.y += (targetFigY - fig.y) * fig.speed;
+                
+                fig.element.style.position = 'fixed';
+                let viewportX = fig.x - window.scrollX; 
+                let viewportY = fig.y - window.scrollY;  
+                let bounceY = (isWakingUp) ? Math.sin(time + fig.jumpPhase) * 5 : 0; 
+                fig.element.style.transform = `translate(calc(${viewportX}px - 50%), calc(${viewportY + bounceY}px - 50%)) scaleX(${fig.direction})`;
+            } else { 
+                let targetFigX = fig.dropX;
+                let targetFigY = fig.dropY;
+
+                fig.x += (targetFigX - fig.x) * fig.speed;
+                fig.y += (targetFigY - fig.y) * fig.speed;
+                
+                fig.element.style.position = 'absolute';
+                fig.element.style.transform = `translate(calc(${fig.x}px - 50%), calc(${fig.y}px - 50%)) scaleX(${fig.direction})`;
+
+                maskLayers.push(`radial-gradient(circle 350px at ${fig.x - window.scrollX}px ${fig.y - window.scrollY}px, transparent 0%, transparent 50%, rgba(0,0,0,0.3) 75%, black 100%)`);
+            }
+            let deltaX = fig.x - oldX;
+            if (Math.abs(deltaX) > 0.3) fig.direction = deltaX > 0 ? 1 : -1;
+        });
+
+        if (fog) {
+            let maskString = maskLayers.join(', ');
+            fog.style.webkitMaskImage = maskString;
+            fog.style.maskImage = maskString;
+        }
+        requestAnimationFrame(animate);
+    }
+    animate(); 
+
+    // --- Просмотр изображений ---
+    let currentImages = []; 
+    let currentIndex = 0;   
+
+    function showImage(index) {
+        if (currentImages.length === 0) return;
+        currentIndex = (index + currentImages.length) % currentImages.length;
+        if(lightboxImage) lightboxImage.src = currentImages[currentIndex];
+    }
+
+    function openLightbox(carouselSection, clickedImage) {
+        currentImages = Array.from(carouselSection.querySelectorAll('.carousel-image-item img')).map(el => el.dataset.src);
+        const clickedSrc = clickedImage.dataset.src;
+        const startIndex = currentImages.indexOf(clickedSrc);
+        
+        if (startIndex === -1) return;
+
+        showImage(startIndex);
+        if(lightbox) lightbox.classList.add('active');
+        if(body) body.classList.add('no-scroll'); 
+    }
+
+    function initLightbox() {
+        if (!lightbox) return;
+        const lightboxClose = document.getElementById('lightboxClose');
+        const lightboxPrev = document.getElementById('lightboxPrev');
+        const lightboxNext = document.getElementById('lightboxNext');
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            body.classList.remove('no-scroll'); 
+            lightboxImage.src = ''; 
+            currentImages = []; 
+            currentIndex = 0;
+        }
+
+        if(lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+        if(lightboxPrev) lightboxPrev.addEventListener('click', () => showImage(currentIndex - 1));
+        if(lightboxNext) lightboxNext.addEventListener('click', () => showImage(currentIndex + 1));
+        lightbox.addEventListener('click', (e) => { 
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            else if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+            else if (e.key === 'ArrowRight') showImage(currentIndex + 1);
+        });
+    }
+
+    function initCarousels() {
+        const carousels = document.querySelectorAll('.photo-carousel-container');
+
+        carousels.forEach(carousel => {
+            const scrollWrapper = carousel.querySelector('.photo-carousel-scroll-wrapper');
+            if (!scrollWrapper) return;
+
+            const prevBtn = carousel.querySelector('.carousel-prev');
+            const nextBtn = carousel.querySelector('.carousel-next');
+            if (prevBtn && nextBtn) {
+                prevBtn.addEventListener('click', () => {
+                    const itemWidth = scrollWrapper.querySelector('.carousel-image-item')?.offsetWidth || 280;
+                    const scrollAmount = (itemWidth + 15) * -2;
+                    scrollWrapper.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                });
+                nextBtn.addEventListener('click', () => {
+                    const itemWidth = scrollWrapper.querySelector('.carousel-image-item')?.offsetWidth || 280;
+                    const scrollAmount = (itemWidth + 15) * 2;
+                    scrollWrapper.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                });
+            }
+
+            let isDown = false;
+            let isDragging = false;
+            let startX;
+            let scrollLeft;
+
+            scrollWrapper.addEventListener('mousedown', (e) => {
+                isDown = true;
+                isDragging = false;
+                scrollWrapper.classList.add('grabbing');
+                startX = e.pageX - scrollWrapper.offsetLeft;
+                scrollLeft = scrollWrapper.scrollLeft;
+            });
+
+            scrollWrapper.addEventListener('mouseleave', () => {
+                isDown = false;
+                scrollWrapper.classList.remove('grabbing');
+            });
+
+            scrollWrapper.addEventListener('mouseup', () => {
+                isDown = false;
+                scrollWrapper.classList.remove('grabbing');
+                setTimeout(() => { isDragging = false; }, 0);
+            });
+
+            scrollWrapper.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - scrollWrapper.offsetLeft;
+                const walk = x - startX;
+                if (Math.abs(walk) > 5) {
+                    isDragging = true;
+                }
+                scrollWrapper.scrollLeft = scrollLeft - walk;
+            });
+
+            carousel.querySelectorAll('.carousel-image-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    if (isDragging) return;
+                    
+                    const img = item.querySelector('img');
+                    const carouselSection = item.closest('.photo-carousel-section');
+                    if (img && carouselSection) {
+                        openLightbox(carouselSection, img);
+                    }
+                });
+            });
+        });
+    }
+    
+    initLightbox(); 
+    initCarousels();
+});
+</script>
+
+</body>
+</html>

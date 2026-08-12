@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VATAGA - Участники</title>
+    
+    <!-- Подключение оригинальных шрифтов -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/caviar-dreams" rel="stylesheet">
+    <link rel="stylesheet" href="css/fonts.css">
+
+    <style>
+        @font-face {
+            font-family: 'Caviar Dreams';
+            src: url('fonts/CaviarDreams.woff2') format('woff2'),
+                 url('https://fonts.cdnfonts.com/s/14299/CaviarDreams.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Caviar Dreams';
+            src: url('fonts/CaviarDreams_Bold.woff2') format('woff2'),
+                 url('https://fonts.cdnfonts.com/s/14299/CaviarDreams_Bold.woff') format('woff');
+            font-weight: bold;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body { 
+            font-family: 'Caviar Dreams', sans-serif; 
+            background-color: #f7f7f7; 
+            color: #000000;            
+            overflow-x: hidden; 
+            padding-top: 170px;
+        }
+
+        /* На ПК скрываем курсор, на мобильных оставляем естественный */
+        @media (min-width: 769px) {
+            html, body, * { 
+                cursor: none !important; 
+                user-select: none; 
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cursor-circle {
+                display: none !important;
+            }
+        }
+
+        /* Фоновый шум */
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 900; opacity: 0.07;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        /* Логотип */
+        .logo {
+            position: fixed;
+            top: 40px;
+            left: 50px;
+            font-family: 'League Spartan', sans-serif;
+            font-size: 32px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            color: #000000;
+            text-decoration: none;
+            z-index: 650;
+            transition: transform 0.3s, color 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        /* Меню навигации (Десктоп) */
+        nav.top-menu {
+            position: fixed;
+            top: 40px;
+            right: 50px;
+            z-index: 650;
+            display: flex;
+            gap: 40px; 
+            transition: opacity 0.3s ease;
+        }
+
+        nav.top-menu a {
+            color: #000000; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 18px; 
+            transition: transform 0.3s, color 0.3s;
+            white-space: nowrap;
+        }
+
+        nav.top-menu a:hover {
+            transform: scale(1.05);
+        }
+
+        nav.top-menu a.active {
+            font-weight: 900; 
+        }
+
+        /* Мобильная кнопка меню (Бургер) */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 700;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 40px;
+            height: 32px;
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #000000;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /* Шапка с градиентным размытием при скролле */
+        .header-blur-background {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 150px; 
+            z-index: 608; 
+            pointer-events: none;
+            background: linear-gradient(to bottom, rgba(247, 247, 247, 0.95) 40%, rgba(247, 247, 247, 0) 100%); 
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px); 
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);      
+            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+
+        /* Основной контейнер контента */
+        .content-container {
+            position: relative;
+            z-index: 600;
+            margin: 0 50px 100px 50px;
+            max-width: calc(100% - 100px); 
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; 
+        }
+
+        .section-title {
+            font-size: 16px; 
+            font-weight: 600; 
+            margin-bottom: 20px; 
+        }
+
+        .section-title:first-of-type { 
+            margin-top: 20px; 
+        }
+
+        .section-title:not(:first-of-type) { 
+            margin-top: 60px; 
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 120px);
+            column-gap: 24px; 
+            row-gap: 16px; 
+        }
+
+        .member-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; 
+            width: 120px;
+        }
+        
+        .member-photo {
+            display: block; 
+            width: 120px; height: 120px; 
+            background-color: #e0e0e0; 
+            border-radius: 8px; 
+            margin-bottom: 8px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            text-decoration: none; 
+            position: relative; 
+            overflow: hidden; 
+            cursor: pointer;
+        }
+        
+        .partners-grid .member-photo,
+        .past-residents-grid .member-photo {
+            cursor: default;
+        }
+
+        .member-photo img { 
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover; 
+            transition: filter 0.3s ease; 
+        }
+
+        .member-photo::before {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #f7f7f7; 
+            opacity: 0; 
+            pointer-events: none; 
+            z-index: 1; 
+            border-radius: 8px; 
+            transition: opacity 0.3s ease; 
+        }
+
+        .member-photo.is-fogged::before { opacity: 0.9; }
+        .member-photo.is-fogged img { filter: blur(5px); }
+
+        .member-photo:hover {
+            transform: scale(1.04); 
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); 
+        }
+        
+        .partners-grid .member-photo:hover,
+        .past-residents-grid .member-photo:hover {
+            transform: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .member-name {
+            font-size: 13px; 
+            color: #555555; 
+            opacity: 0; 
+            padding-left: 2px; 
+            margin: 0;
+            transition: opacity 0.3s ease, font-weight 0.3s ease, color 0.3s ease; 
+        }
+
+        .member-item:hover .member-name, .member-name.active {
+            opacity: 1; 
+            font-weight: 600; 
+            color: #000000;
+        }
+        
+        .cursor-circle { 
+            position: fixed; top: 0; left: 0; width: 20px; height: 20px; 
+            border: 2px solid #000000; border-radius: 50%; 
+            pointer-events: none; transform: translate(-50%, -50%); 
+            z-index: 999999; 
+        }
+        
+        .figure {
+            position: fixed; top: 0; left: 0; 
+            pointer-events: none;
+            z-index: 605;
+            transition: opacity 0.5s; 
+        }
+        
+        .figure img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* --- МОБИЛЬНАЯ АДАПТАЦИЯ --- */
+        @media (max-width: 768px) {
+            body { padding-top: 110px; }
+            
+            .logo { top: 25px; left: 20px; font-size: 26px; }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            nav.top-menu {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: rgba(247, 247, 247, 0.98);
+                backdrop-filter: blur(15px);
+                -webkit-backdrop-filter: blur(15px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 30px;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+                z-index: 600;
+            }
+
+            nav.top-menu.mobile-open {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto !important;
+            }
+
+            nav.top-menu a { font-size: 24px; }
+
+            .header-blur-background { height: 100px; }
+
+            .content-container {
+                margin: 0 20px 80px 20px;
+                max-width: calc(100% - 40px);
+            }
+
+            .members-grid {
+                grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); 
+                column-gap: 15px; 
+                row-gap: 15px;
+            }
+
+            .member-item { width: 100%; }
+
+            .member-photo { 
+                width: 100%;
+                height: 0;
+                padding-bottom: 100%; /* Делаем идеальный квадрат */
+            }
+
+            /* На телефонах имена сразу видны под фото */
+            .member-name { 
+                opacity: 0.9; 
+                font-size: 12px; 
+                padding-left: 0; 
+                text-align: left; 
+                margin-top: 4px;
+            }
+
+            .section-title { font-size: 15px; margin-top: 20px; margin-bottom: 15px; }
+            .section-title:not(:first-of-type) { margin-top: 40px; }
+        }
+
+        @media (max-width: 420px) {
+            .members-grid { 
+                grid-template-columns: repeat(3, 1fr); 
+                column-gap: 12px;
+                row-gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="logo">!vataga</a>
+
+    <!-- Мобильная кнопка меню -->
+    <button class="mobile-menu-toggle" id="menuToggle" aria-label="Открыть меню">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <nav class="top-menu" id="topMenu">
+        <a href="projects.html">Проекты</a> 
+        <a href="members.html" class="active">Участники</a> 
+        <a href="archive.html">Архив</a>
+        <a href="merch.html">Мерч</a>
+        <a href="announcements.html">Анонсы</a>
+    </nav>
+
+    <div class="header-blur-background"></div>
+
+    <div class="content-container">
+        <p class="section-title">Основные участники</p>
+        <div class="members-grid">
+            <!-- ROW 1 -->
+            <div class="member-item">
+                <a href="ilya-dyakyn.html" class="member-photo">
+                    <img src="images/members/ilya-dyakyn/portrait.jpg" alt="Дякин Илья">
+                </a>
+                <p class="member-name">Дякин Илья</p>
+            </div>
+            <div class="member-item">
+                <a href="vsevolod-oleynikov.html" class="member-photo">
+                    <img src="images/members/vsevolod-oleynikov/portrait.jpg" alt="Олейников Всеволод">
+                </a>
+                <p class="member-name">Олейников Всеволод</p>
+            </div>
+            <div class="member-item">
+                <a href="alisa-naumova.html" class="member-photo">
+                    <img src="images/members/alisa-naumova/portrait.jpg" alt="Наумова Алиса">
+                </a>
+                <p class="member-name">Наумова Алиса</p>
+            </div>
+            <div class="member-item">
+                <a href="maxim-zhirov.html" class="member-photo">
+                    <img src="images/members/maxim-zhirov/portrait.jpg" alt="Жиров Максим">
+                </a>
+                <p class="member-name">Жиров Максим</p>
+            </div>
+            <!-- ROW 2 -->
+            <div class="member-item">
+                <a href="zheleznyy-yan.html" class="member-photo"> 
+                    <img src="images/members/zheleznyy-yan/portrait.jpg" alt="Железный Ян">
+                </a>
+                <p class="member-name">Железный Ян</p>
+            </div>
+            <div class="member-item">
+                <a href="rashid-abdullaev.html" class="member-photo">
+                    <img src="images/members/rashid-abdullaev/portrait.jpg" alt="Абдуллаев Рашид">
+                </a>
+                <p class="member-name">Абдуллаев Рашид</p>
+            </div>
+            <div class="member-item">
+                <a href="konstantin-shchelkalin.html" class="member-photo">
+                    <img src="images/members/konstantin-shchelkalin/portrait.jpg" alt="Щелкалин Константин">
+                </a>
+                <p class="member-name">Щелкалин Константин</p>
+            </div>
+            <div class="member-item">
+                <a href="elizaveta-vinogradova.html" class="member-photo">
+                    <img src="images/members/elizaveta-vinogradova/portrait.jpg" alt="Виноградова Елизавета">
+                </a>
+                <p class="member-name">Виноградова Елизавета</p>
+            </div>
+            <!-- ROW 3 -->
+            <div class="member-item">
+                <a href="valeriya-tarshilova.html" class="member-photo">
+                    <img src="images/members/valeriya-tarshilova/portrait.jpg" alt="Таршилова Валерия">
+                </a>
+                <p class="member-name">Таршилова Валерия</p>
+            </div>
+            <div class="member-item">
+                <a href="svyatoslav-mishta.html" class="member-photo">
+                    <img src="images/members/svyatoslav-mishta/portrait.jpg" alt="Мишта Святослав">
+                </a> 
+                <p class="member-name">Мишта Святослав</p>
+            </div>
+            <div class="member-item">
+                <a href="polina-yarinovskaya.html" class="member-photo">
+                    <img src="images/members/polina-yarinovskaya/portrait.jpg" alt="Яриновская Полина">
+                </a>
+                <p class="member-name">Яриновская Полина</p>
+            </div>
+            <div class="member-item">
+                <a href="alexandr-sula.html" class="member-photo">
+                    <img src="images/members/alexandr-sula/portrait.jpg" alt="Сула Александр">
+                </a>
+                <p class="member-name">Сула Александр</p>
+            </div>
+            <!-- ROW 4 -->
+            <div class="member-item">
+                <a href="semen-ryabov.html" class="member-photo">
+                    <img src="images/members/semen-ryabov/portrait.jpg" alt="Рябов Семен">
+                </a>
+                <p class="member-name">Рябов Семен</p>
+            </div>
+            <div class="member-item">
+                <a href="viktoriya-krasnik.html" class="member-photo">
+                    <img src="images/members/viktoriya-krasnik/portrait.jpg" alt="Красник Виктория">
+                </a>
+                <p class="member-name">Красник Виктория</p>
+            </div>
+        </div>
+
+        <p class="section-title">Партнеры Ватаги</p>
+        <div class="partners-grid members-grid">
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/maxim-latynin/portrait.jpg" alt="Латынин Максим">
+                </div> 
+                <p class="member-name">Латынин Максим</p>
+            </div>
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/alexandra-petrova/portrait.jpg" alt="Петрова Александра">
+                </div> 
+                <p class="member-name">Петрова Александра</p>
+            </div>
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/violetta-bliznyuk/portrait.jpg" alt="Близнюк Виолетта">
+                </div> 
+                <p class="member-name">Близнюк Виолетта</p>
+            </div>
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/sofya-turovskaya/portrait.jpg" alt="Туровская Софья">
+                </div>
+                <p class="member-name">Туровская Софья</p>
+            </div>
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/liza-antonova/portrait.jpg" alt="Антонова Лиза">
+                </div>
+                <p class="member-name">Антонова Лиза</p>
+            </div>
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/yaroslav-nazarov/portrait.jpg" alt="Назаров Ярослав">
+                </div>
+                <p class="member-name">Назаров Ярослав</p>
+            </div>
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/efrem-nikonov/portrait.jpg" alt="Никонов Ефрем">
+                </div>
+                <p class="member-name">Никонов Ефрем</p>
+            </div>
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/elizaveta-karpova/portrait.jpg" alt="Карпова Елизавета">
+                </div>
+                <p class="member-name">Карпова Елизавета</p>
+            </div>
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/ilya-zakharov/portrait.jpg" alt="Захаров Илья">
+                </div> 
+                <p class="member-name">Захаров Илья</p>
+            </div>
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/sofya-petrunicheva/portrait.jpg" alt="Петруничева Софья">
+                </div>
+                <p class="member-name">Петруничева Софья</p>
+            </div>
+        </div>
+
+        <p class="section-title">Резиденты Ватаги прошлых лет</p>
+        <div class="past-residents-grid members-grid">
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/sofya-sheynikova/portrait.jpg" alt="Шейникова Софья">
+                </div> 
+                <p class="member-name">Шейникова Софья</p>
+            </div>
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/vladimir-dikov/portrait.jpg" alt="Диков Владимир">
+                </div>
+                <p class="member-name">Диков Владимир</p>
+            </div>
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/darya-petrushina/portrait.jpg" alt="Петрушина Дарья">
+                </div>
+                <p class="member-name">Петрушина Дарья</p>
+            </div>
+            <div class="member-item">
+                <div class="member-photo"> 
+                    <img src="images/members/valeriya-mishina/portrait.jpg" alt="Мишина Валерия">
+                </div>
+                <p class="member-name">Мишина Валерия</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="noise-overlay"></div>
+    <div class="cursor-circle" id="circle"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const circle = document.getElementById('circle');
+            const menuToggle = document.getElementById('menuToggle');
+            const topMenu = document.getElementById('topMenu');
+            
+            let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+            let clusterX = mouseX + window.scrollX, clusterY = mouseY + window.scrollY; 
+            let time = 0; 
+
+            // Мобильное меню
+            menuToggle.addEventListener('click', () => {
+                menuToggle.classList.toggle('active');
+                topMenu.classList.toggle('mobile-open');
+            });
+
+            function updatePointerPosition(clientX, clientY) {
+                mouseX = clientX; 
+                mouseY = clientY;
+                if (circle) {
+                    circle.style.transform = `translate(calc(${mouseX}px - 50%), calc(${mouseY}px - 50%))`;
+                }
+            }
+
+            document.addEventListener('mousemove', (e) => updatePointerPosition(e.clientX, e.clientY));
+            document.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    updatePointerPosition(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            }, { passive: true });
+
+            const figureImageFiles = [
+                'images/hero1.png', 'images/hero2.png', 'images/hero3.png',
+                'images/hero4.png', 'images/hero5.png', 'images/hero6.png',
+                'images/hero7.png', 'images/hero8.png'
+            ];
+            const figuresCount = figureImageFiles.length; 
+            const figures = []; 
+
+            for (let i = 0; i < figuresCount; i++) {
+                const imgFileName = figureImageFiles[i];
+                const imgCode = `<img src="${imgFileName}" alt="fig">`;
+
+                let el = document.createElement('div');
+                el.className = 'figure';
+                el.innerHTML = imgCode; 
+                document.body.appendChild(el); 
+
+                let size = 25 + Math.random() * 20; 
+                el.style.width = size + 'px'; el.style.height = size + 'px';
+                let baseOpacity = 0.5 + Math.random() * 0.5; 
+                el.style.opacity = baseOpacity;
+
+                figures.push({
+                    element: el,
+                    x: Math.random() * window.innerWidth + window.scrollX, 
+                    y: Math.random() * window.innerHeight + window.scrollY, 
+                    offsetX: (Math.random() - 0.5) * 40, 
+                    offsetY: (Math.random() - 0.5) * 40,
+                    speed: 0.03 + Math.random() * 0.03, 
+                    jumpPhase: Math.random() * Math.PI * 2,
+                    state: 'follow', 
+                    dropX: 0, 
+                    dropY: 0,
+                    baseOpacity: baseOpacity,
+                    direction: 1,
+                    claimedItemTitle: null 
+                });
+            }
+
+            function handleDropInteraction(clientX, clientY, target) {
+                if (target.closest('a') || target.closest('.mobile-menu-toggle')) {
+                    return; 
+                }
+
+                let targetItemTitle = null;
+                const memberItem = target.closest('.member-item'); 
+
+                if (memberItem) {
+                    targetItemTitle = memberItem.querySelector('.member-name'); 
+                } 
+
+                let followers = figures.filter(f => f.state === 'follow');
+                if (followers.length > 0) {
+                    let randomFig = followers[Math.floor(Math.random() * followers.length)];
+                    
+                    randomFig.state = 'dropped';
+                    randomFig.dropX = clientX + window.scrollX; 
+                    randomFig.dropY = clientY + window.scrollY;
+                    randomFig.element.style.opacity = 1; 
+
+                    if (targetItemTitle) {
+                        targetItemTitle.classList.add('active');
+                        randomFig.claimedItemTitle = targetItemTitle; 
+                    }
+
+                    setTimeout(() => {
+                        randomFig.state = 'follow'; 
+                        randomFig.element.style.opacity = randomFig.baseOpacity; 
+                        
+                        if (randomFig.claimedItemTitle) {
+                            randomFig.claimedItemTitle.classList.remove('active');
+                            randomFig.claimedItemTitle = null; 
+                        }
+                    }, 4000 + Math.random() * 2000); 
+                }
+            }
+
+            document.addEventListener('mousedown', (e) => handleDropInteraction(e.clientX, e.clientY, e.target));
+
+            function animate() {
+                time += 0.08; 
+                
+                let targetClusterX_doc = mouseX + window.scrollX; 
+                let targetClusterY_doc = mouseY + window.scrollY;
+
+                let dx = targetClusterX_doc - clusterX;
+                let dy = targetClusterY_doc - clusterY;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist > 0) {
+                    const clusterOffset = 35; 
+                    clusterX += (targetClusterX_doc - (dx / dist) * clusterOffset - clusterX) * 0.4;
+                    clusterY += (targetClusterY_doc - (dy / dist) * clusterOffset - clusterY) * 0.4;
+                }
+
+                figures.forEach(fig => {
+                    let oldX_doc = fig.x; 
+
+                    if (fig.state === 'follow') {
+                        let targetFigX_doc = clusterX + fig.offsetX; 
+                        let targetFigY_doc = clusterY + fig.offsetY;
+
+                        fig.x += (targetFigX_doc - fig.x) * fig.speed;
+                        fig.y += (targetFigY_doc - fig.y) * fig.speed;
+                        
+                        fig.element.style.position = 'fixed';
+                        fig.element.style.left = '0';
+                        fig.element.style.top = '0';
+
+                        let viewportX = fig.x - window.scrollX;
+                        let viewportY = fig.y - window.scrollY;
+                        
+                        let bounceY = Math.sin(time + fig.jumpPhase) * 5; 
+                        fig.element.style.transform = `translate(calc(${viewportX}px - 50%), calc(${viewportY + bounceY}px - 50%)) scaleX(${fig.direction})`;
+
+                    } else { 
+                        let targetFigX_doc = fig.dropX; 
+                        let targetFigY_doc = fig.dropY;
+
+                        fig.x += (targetFigX_doc - fig.x) * fig.speed; 
+                        fig.y += (targetFigY_doc - fig.y) * fig.speed;
+                        
+                        fig.element.style.position = 'absolute'; 
+                        fig.element.style.left = '0';
+                        fig.element.style.top = '0';
+                        fig.element.style.transform = `translate(calc(${fig.x}px - 50%), calc(${fig.y}px - 50%)) scaleX(${fig.direction})`; 
+                    }
+
+                    let deltaX = fig.x - oldX_doc;
+                    if (Math.abs(deltaX) > 0.3) fig.direction = deltaX > 0 ? 1 : -1;
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate(); 
+
+            // Эффект легкого размытия остальных портретов
+            const allFoggedItems = [...document.querySelectorAll('.member-photo')];
+            allFoggedItems.forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    allFoggedItems.forEach(otherItem => {
+                        if (otherItem !== item) { 
+                            otherItem.classList.add('is-fogged');
+                        }
+                    });
+                });
+                item.addEventListener('mouseleave', () => {
+                    allFoggedItems.forEach(otherItem => {
+                        otherItem.classList.remove('is-fogged'); 
+                    });
+                });
+            });
+        }); 
+    </script>
+</body>
+</html>
