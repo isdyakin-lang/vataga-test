@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VATAGA - Участник: Виноградова Елизавета</title> 
+    <title>VATAGA - Участник: Александр Сула</title> 
     
     <!-- Подключение оригинальных шрифтов: League Spartan и Montserrat с Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -500,6 +500,7 @@
                 padding-top: 0; 
                 width: 100%;
             }
+            
             .member-text-content h1 {
                 font-size: 2.2em;
             }
@@ -550,28 +551,25 @@
     </nav>
 
     <nav class="member-sub-menu">
-        <a href="elizaveta-vinogradova.html" class="active-sub-menu-item">Виноградова</a> 
-        <a href="elizaveta-vinogradova-personal-projects.html">Личные проекты</a> 
+        <a href="alexandr-sula.html" class="active-sub-menu-item">Сула</a> 
+        <a href="alexandr-sula-personal-projects.html">Личные проекты</a> 
     </nav>
-    
+
     <div class="header-blur-background"></div>
 
     <div class="content-container">
-        <section class="member-intro-section" id="elizaveta-info-section">
+        <section class="member-intro-section" id="alexandr-info-section">
             <div class="member-photo-wrapper" data-section="member-photo" data-index="0">
-                <img src="images/members/elizaveta-vinogradova/portrait.jpg" data-full-src="images/members/elizaveta-vinogradova/portrait.jpg" alt="Портрет Виноградовой Елизаветы">
+                <img src="images/members/alexandr-sula/portrait.jpg" data-full-src="images/members/alexandr-sula/portrait.jpg" alt="Портрет Александра Сулы">
             </div>
             <div class="member-text-content">
-                <h1>Виноградова Елизавета</h1>
-                <p>Архитектор. Архитектор-исследователь. Студентка 3-го курса ГУЗ. Владею программами AutoDesk Revit, AutoCad, 3DsMax, Enscape, Photoshop.</p>
-                <p><strong>Достижения:</strong></p>
-                <p>Реализация интерьера</p>
-                <p>Участие в воркшопе бюро RDNK [Рождественка] - 2025 г.</p>
-                <p>Участник Архстояния 2026</p>
-                <p>Участие в воркшопе Smart glass - 2025-2026 гг.</p>
-                <p><strong>Опыт работы:</strong></p>
-                <p>Частный дизайн-проект квартиры 40 м.кв. - 2025-2026 гг.</p>
-             </div>
+                <h1>Александр Сула</h1>
+                <p>Фотограф, цифровой художник. Член ватаги с момента ее основания в 2021 году. Специализируется на портретной и концептуальной фотографии. Владеет Adobe Lightroom, Photoshop, Capture One.</p>
+                <p><strong>Достижения</strong></p>
+                <p>Публикация в журнале "Digital Photo Pro".</p>
+                <p>Победитель конкурса "Urban Vision" в категории "Стрит-фото".</p>
+                <p>Персональная выставка "Тени и Свет" в галерее "Фокус".</p>
+            </div>
         </section>
     </div>
 
@@ -645,7 +643,7 @@
         const figures = []; 
 
         for (let i = 0; i < activeFiles.length; i++) {
-            const imgFileName = activeFiles[i % activeFiles.length];
+            const imgFileName = activeFiles[i];
             const imgCode = `<img src="${imgFileName}" alt="fig" loading="lazy">`;
 
             let el = document.createElement('div');

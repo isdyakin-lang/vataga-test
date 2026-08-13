@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VATAGA - Участник: Виноградова Елизавета</title> 
+    <title>VATAGA - Участник: Щелкалин Константин</title> 
     
     <!-- Подключение оригинальных шрифтов: League Spartan и Montserrat с Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,9 +46,8 @@
             overflow-x: hidden; 
             padding-top: 165px; 
         }
-        
         body.no-scroll {
-            overflow: hidden !important; 
+            overflow: hidden !important;
         }
 
         /* На ПК скрываем курсор, на мобильных оставляем стандартный */
@@ -71,7 +70,7 @@
             pointer-events: none; z-index: 900; opacity: 0.07;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
-
+        
         /* Блюр заднего фона при открытии микро-меню */
         .page-blur-overlay {
             position: fixed;
@@ -173,20 +172,20 @@
         /* Субменю участника (Десктоп) */
         nav.member-sub-menu {
             position: fixed;
-            top: 120px; 
-            right: 50px; 
+            top: 120px;
+            right: 50px;
             display: flex;
             flex-direction: row;
-            gap: 40px; 
-            z-index: 609; 
+            gap: 40px;
+            z-index: 609;
         }
         nav.member-sub-menu a {
             color: #000000; 
             text-decoration: none; 
-            font-weight: bold; 
+            font-weight: bold;
             font-size: 18px; 
             transition: color 0.3s, transform 0.3s;
-            white-space: nowrap; 
+            white-space: nowrap;
         }
         nav.member-sub-menu a:hover {
             color: #000000; 
@@ -237,37 +236,37 @@
         .content-container {
             position: relative;
             z-index: 600; 
-            margin: 0 auto 100px auto; 
-            max-width: 1200px; 
+            margin: 0 auto 100px auto;
+            max-width: 1200px;
             padding: 0 20px; 
             display: flex;
             flex-direction: column;
-            align-items: center; 
+            align-items: center;
         }
         
         .member-intro-section {
             display: flex;
-            justify-content: center; 
-            align-items: flex-start; 
-            gap: 60px; 
-            margin: 30px auto; 
-            max-width: 1000px; 
-            width: 100%; 
+            justify-content: center;
+            align-items: flex-start;
+            gap: 60px;
+            margin: 30px auto;
+            max-width: 1000px;
+            width: 100%;
         }
 
         .member-photo-wrapper {
             position: relative;
-            width: 300px; 
-            height: 375px; 
-            padding: 15px; 
-            box-sizing: border-box; 
+            width: 300px;
+            height: 375px;
+            padding: 15px;
+            box-sizing: border-box;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-            background-color: #e0e0e0; 
-            flex-shrink: 0; 
-            cursor: pointer; 
-            margin-top: 40px; 
+            background-color: #e0e0e0;
+            flex-shrink: 0;
+            cursor: pointer;
+            margin-top: 40px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
@@ -295,7 +294,6 @@
             color: #444444;
             padding-top: 10px; 
         }
-        
         .member-text-content h1 {
             font-family: 'Caviar Dreams', 'Montserrat', sans-serif; 
             font-size: 2.5em; 
@@ -304,7 +302,6 @@
             margin-top: 0;
             margin-bottom: 20px;
         }
-        
         .member-text-content p {
             margin-bottom: 15px;
         }
@@ -414,7 +411,7 @@
                 padding-top: 150px; 
             }
             .logo { top: 25px; left: 20px; font-size: 26px; }
-
+            
             .mobile-menu-toggle {
                 display: flex;
             }
@@ -459,7 +456,7 @@
                 pointer-events: auto !important;
             }
 
-            /* Горизонтальное центрированное субменю на мобильных */
+            /* Горизонтальное центрированное субменю */
             nav.member-sub-menu {
                 position: fixed;
                 top: 85px; 
@@ -480,16 +477,16 @@
                 flex-direction: column;
                 align-items: center;
                 gap: 30px;
-                margin: 15px auto; 
+                margin: 15px auto;
             }
             .member-photo-wrapper {
                 width: 250px; 
-                height: 312.5px; 
-                padding: 10px; 
-                margin-top: 20px; 
+                height: 312.5px;
+                padding: 10px;
+                margin-top: 20px;
             }
             .member-photo-wrapper img {
-                top: 10px; left: 10px; 
+                top: 10px; left: 10px;
                 width: calc(100% - 20px); 
                 height: calc(100% - 20px); 
             }
@@ -517,11 +514,11 @@
             }
             .member-photo-wrapper {
                 width: 200px; 
-                height: 250px; 
-                padding: 8px; 
+                height: 250px;
+                padding: 8px;
             }
             .member-photo-wrapper img {
-                top: 8px; left: 8px; 
+                top: 8px; left: 8px;
                 width: calc(100% - 16px); 
                 height: calc(100% - 16px); 
             }
@@ -550,28 +547,25 @@
     </nav>
 
     <nav class="member-sub-menu">
-        <a href="elizaveta-vinogradova.html" class="active-sub-menu-item">Виноградова</a> 
-        <a href="elizaveta-vinogradova-personal-projects.html">Личные проекты</a> 
+        <a href="konstantin-shchelkalin.html" class="active-sub-menu-item">Щелкалин</a> 
+        <a href="konstantin-shchelkalin-personal-projects.html">Личные проекты</a> 
     </nav>
     
     <div class="header-blur-background"></div>
 
     <div class="content-container">
-        <section class="member-intro-section" id="elizaveta-info-section">
+        <section class="member-intro-section" id="konstantin-info-section">
             <div class="member-photo-wrapper" data-section="member-photo" data-index="0">
-                <img src="images/members/elizaveta-vinogradova/portrait.jpg" data-full-src="images/members/elizaveta-vinogradova/portrait.jpg" alt="Портрет Виноградовой Елизаветы">
+                <img src="images/members/konstantin-shchelkalin/portrait.jpg" data-full-src="images/members/konstantin-shchelkalin/portrait.jpg" alt="Портрет Константина Щелкалина">
             </div>
             <div class="member-text-content">
-                <h1>Виноградова Елизавета</h1>
-                <p>Архитектор. Архитектор-исследователь. Студентка 3-го курса ГУЗ. Владею программами AutoDesk Revit, AutoCad, 3DsMax, Enscape, Photoshop.</p>
+                <h1>Щелкалин Константин</h1>
+                <p>Архитектор-концептуалист. Софт: Revit, AutoCAD, Photoshop, D5 Render, Figma, Nano Banana.</p>
                 <p><strong>Достижения:</strong></p>
-                <p>Реализация интерьера</p>
-                <p>Участие в воркшопе бюро RDNK [Рождественка] - 2025 г.</p>
-                <p>Участник Архстояния 2026</p>
-                <p>Участие в воркшопе Smart glass - 2025-2026 гг.</p>
-                <p><strong>Опыт работы:</strong></p>
-                <p>Частный дизайн-проект квартиры 40 м.кв. - 2025-2026 гг.</p>
-             </div>
+                <p>Участник воркшопа "Light Industrial"</p>
+                <p>Участник воркшопа "SmartGlass"</p>
+                <p>Участие в Форсайт-сессии "Будущее культурного наследия глазами студентов"</p>
+            </div>
         </section>
     </div>
 
