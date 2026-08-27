@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VATAGA - Мероприятия</title>
+
+    <!-- Подключение оригинальных шрифтов: League Spartan и Montserrat с Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@900&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=ohbxUcAemezZNNWGgeFiFwh8wU-4Be-uBJlWQQUIedEP2QV6VHK0TAEUvGspng2o8g7zmbhbMCwo_JFKye5-9ACRUtS4VQ6E0rceosXnsdg" charset="UTF-8"></script><style>
+        /* Локальное подключение Caviar Dreams */
+        @font-face {
+            font-family: 'Caviar Dreams';
+            src: url('fonts/CaviarDreams.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Caviar Dreams';
+            src: url('fonts/CaviarDreams_Bold.woff2') format('woff2');
+            font-weight: bold;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Caviar Dreams', 'Montserrat', sans-serif;
+            background: #f7f7f7;
+            color: #000;
+            overflow-x: hidden;
+            padding-top: 150px;
+        }
+
+        body.no-scroll {
+            overflow: hidden !important;
+        }
+
+        /* На ПК скрываем курсор, на мобильных оставляем стандартный */
+        @media (min-width: 769px) {
+            html, body, * {
+                cursor: none !important;
+                user-select: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cursor-circle {
+                display: none !important;
+            }
+        }
+
+        /* Оверлей шума */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 900;
+            opacity: 0.07;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Блюр заднего фона при открытии микро-меню */
+        .page-blur-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 680;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(247, 247, 247, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        body.menu-open .page-blur-overlay {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Размытие под шапкой при скролле */
+        .header-blur-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 130px;
+            z-index: 608;
+            pointer-events: none;
+            background: linear-gradient(
+                to bottom,
+                rgba(247, 247, 247, 0.95) 0%,
+                rgba(247, 247, 247, 0.95) 75%,
+                rgba(247, 247, 247, 0.4) 90%,
+                rgba(247, 247, 247, 0) 100%
+            );
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            mask-image: linear-gradient(
+                to bottom,
+                black 0%,
+                black 75%,
+                rgba(0, 0, 0, 0.6) 90%,
+                transparent 100%
+            );
+            -webkit-mask-image: linear-gradient(
+                to bottom,
+                black 0%,
+                black 75%,
+                rgba(0, 0, 0, 0.6) 90%,
+                transparent 100%
+            );
+        }
+
+        /* Логотип */
+        .logo {
+            position: fixed;
+            top: 40px;
+            left: 50px;
+            font-family: 'League Spartan', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #000;
+            text-decoration: none;
+            z-index: 650;
+            transition: transform 0.3s, color 0.3s;
+        }
+
+        .logo:hover {
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        /* Меню навигации (Десктоп) */
+        nav.top-menu {
+            position: fixed;
+            top: 40px;
+            right: 50px;
+            display: flex;
+            gap: 40px;
+            z-index: 700;
+            transition: opacity 0.3s ease;
+        }
+
+        nav.top-menu a {
+            font-family: 'Caviar Dreams', 'Montserrat', sans-serif;
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            transition: transform 0.3s, opacity 0.3s, color 0.3s;
+            white-space: nowrap;
+            opacity: 0.8;
+        }
+
+        nav.top-menu a:hover {
+            color: #000;
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        nav.top-menu a.active {
+            font-weight: bold;
+            opacity: 1;
+        }
+
+        /* Мобильная кнопка меню (Бургер) */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 750;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 40px;
+            height: 32px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: #000;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /* Контент */
+        .content-container {
+            position: relative;
+            z-index: 600;
+            max-width: 1200px;
+            margin: 10px auto 100px;
+            padding: 0 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .upcoming-events-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 60px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Текущее мероприятие */
+        .current-event-section {
+            flex-grow: 1;
+            max-width: 780px;
+            min-width: 300px;
+        }
+
+        .current-event-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            display: flex;
+            flex-direction: row;
+            gap: 50px;
+            align-items: flex-start;
+        }
+
+        .current-event-poster {
+            flex-shrink: 0;
+            width: 280px;
+            height: 373px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #e0e0e0;
+        }
+
+        .current-event-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .current-event-details {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            color: #444;
+            font-size: 1.1em;
+            line-height: 1.6;
+            padding-top: 5px;
+        }
+
+        .current-event-details h2 {
+            font-size: 1.8em;
+            font-weight: normal;
+            color: #000;
+            margin: 0 0 20px;
+        }
+
+        .event-date-time {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .event-description {
+            margin-bottom: 30px;
+        }
+
+        .register-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #000;
+            color: #f7f7f7;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1em;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .register-button:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+
+        /* Следующее мероприятие */
+        .next-event-section {
+            flex-shrink: 0;
+            width: 280px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .next-event-section h3 {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #000;
+            margin: 0 0 10px;
+        }
+
+        .next-event-poster {
+            width: 100%;
+            height: 345px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #e0e0e0;
+            margin-bottom: 10px;
+        }
+
+        .next-event-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .next-event-details {
+            width: 100%;
+            color: #000;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .next-event-details h4 {
+            font-size: 0.95em;
+            font-weight: bold;
+            color: #000;
+            margin: 0;
+        }
+
+        /* Предыдущие мероприятия */
+        .previous-events-section {
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #000;
+            text-align: left;
+            width: 100%;
+            margin: 0 0 25px;
+        }
+
+        .accordion {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .accordion-item {
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: box-shadow 0.3s;
+        }
+
+        .accordion-item:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 18px 45px 18px 25px;
+            background: transparent;
+            border: none;
+            text-align: left;
+            font-family: 'Caviar Dreams', 'Montserrat', sans-serif;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .accordion-header:hover {
+            background: #f0f0f0;
+        }
+
+        .accordion-header::after {
+            content: '›';
+            font-size: 1.5em;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+            transition: transform 0.3s;
+        }
+
+        .accordion-header.active::after {
+            transform: translateY(-50%) rotate(-90deg);
+        }
+
+        .event-title {
+            flex-grow: 1;
+            margin-right: 20px;
+        }
+
+        .event-date {
+            font-size: 0.9em;
+            color: #888;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-left: 15px;
+        }
+
+        .accordion-content {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .accordion-content.active {
+            max-height: 500px;
+            padding: 15px 25px 20px;
+        }
+
+        .event-content-wrapper {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+
+        .event-image-small {
+            flex-shrink: 0;
+            width: 90px;
+            height: 120px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .event-image-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .event-text-wrapper {
+            flex-grow: 1;
+        }
+
+        .event-summary {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .read-more {
+            display: inline-block;
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .read-more:hover {
+            color: #555;
+        }
+
+        /* Туман */
+        .fog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 500;
+            pointer-events: none;
+        }
+
+        /* Курсор */
+        .cursor-circle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #000;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 999999;
+        }
+
+        /* Фигурки */
+        .figure {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 605;
+            transition: opacity 0.5s;
+        }
+
+        .figure img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* --- МОБИЛЬНАЯ АДАПТАЦИЯ --- */
+        @media (max-width: 900px) {
+            .upcoming-events-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .current-event-section {
+                max-width: 100%;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+
+            .current-event-card {
+                flex-direction: column;
+                align-items: center;
+                gap: 25px;
+                padding: 20px;
+            }
+
+            .current-event-poster {
+                width: 220px;
+                height: 293px;
+            }
+
+            .current-event-details {
+                text-align: center;
+                padding-top: 0;
+            }
+
+            .event-date-time {
+                align-items: center;
+            }
+
+            .next-event-section {
+                width: 100%;
+                max-width: 360px;
+                margin-bottom: 30px;
+            }
+
+            .next-event-poster {
+                height: auto;
+                aspect-ratio: 3 / 4;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 110px;
+            }
+
+            .logo {
+                top: 25px;
+                left: 20px;
+                font-size: 26px;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            /* Компактное МИКРО-МЕНЮ справа вверху */
+            nav.top-menu {
+                position: fixed;
+                top: 70px;
+                right: 25px;
+                width: auto;
+                min-width: 180px;
+                height: auto;
+                background-color: rgba(255, 255, 255, 0.95);
+                border: 1px solid rgba(0, 0, 0, 0.08);
+                border-radius: 12px;
+                padding: 18px 22px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-end;
+                gap: 14px;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+                z-index: 700;
+            }
+
+            nav.top-menu.mobile-open {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+                pointer-events: auto !important;
+            }
+
+            nav.top-menu a {
+                font-size: 19px;
+                font-weight: bold;
+                text-align: right;
+                display: block;
+                padding: 2px 0;
+                pointer-events: auto !important;
+            }
+
+            .content-container {
+                padding: 0 20px;
+                margin-top: 10px;
+            }
+
+            .current-event-poster {
+                width: 200px;
+                height: 266px;
+            }
+
+            .current-event-details h2 {
+                font-size: 1.4em;
+            }
+
+            .event-date-time {
+                font-size: 1.05em;
+            }
+
+            .accordion-header {
+                font-size: 0.95em;
+                padding: 15px 35px 15px 15px;
+            }
+
+            .accordion-content.active {
+                padding: 10px 15px 15px;
+            }
+
+            .event-content-wrapper {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .event-image-small {
+                width: 130px;
+                height: 173px;
+            }
+
+            .event-text-wrapper {
+                text-align: center;
+            }
+
+            .header-blur-background {
+                height: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .current-event-poster {
+                width: 180px;
+                height: 240px;
+            }
+
+            .current-event-details h2 {
+                font-size: 1.25em;
+            }
+
+            .event-date-time {
+                font-size: 0.95em;
+            }
+
+            .accordion-header {
+                font-size: 0.9em;
+                padding: 12px 30px 12px 12px;
+            }
+
+            .event-image-small {
+                width: 110px;
+                height: 146px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="index.html" class="logo">!vataga</a>
+
+    <!-- Бургер -->
+    <button class="mobile-menu-toggle" id="menuToggle" aria-label="Открыть меню">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="page-blur-overlay" id="blurOverlay"></div>
+
+    <nav class="top-menu" id="topMenu">
+        <a href="projects.html">Проекты</a>
+        <a href="members.html">Участники</a>
+        <a href="archive.html">Архив</a>
+        <a href="merch.html">Мерч</a>
+        <a href="announcements.html" class="active">Мероприятия</a>
+    </nav>
+
+    <div class="header-blur-background"></div>
+
+    <div class="content-container">
+        <div class="upcoming-events-container">
+            <section id="current-event-section-dynamic" class="current-event-section" style="display: none;"></section>
+            <section id="next-event-section-dynamic" class="next-event-section" style="display: none;"></section>
+        </div>
+
+        <section class="previous-events-section">
+            <p class="section-title">Предыдущие мероприятия</p>
+            <div id="accordion-dynamic" class="accordion"></div>
+        </section>
+    </div>
+
+    <div class="fog-overlay" id="fog"></div>
+    <div class="noise-overlay"></div>
+    <div class="cursor-circle" id="circle"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            /* =========================
+               МОБИЛЬНОЕ МЕНЮ
+            ========================= */
+            const menuToggle = document.getElementById('menuToggle');
+            const topMenu = document.getElementById('topMenu');
+            const blurOverlay = document.getElementById('blurOverlay');
+            const body = document.body;
+
+            function toggleMenu() {
+                menuToggle.classList.toggle('active');
+                topMenu.classList.toggle('mobile-open');
+                body.classList.toggle('menu-open');
+            }
+
+            menuToggle.addEventListener('click', toggleMenu);
+            blurOverlay.addEventListener('click', toggleMenu);
+
+            /* =========================
+               МЕРОПРИЯТИЯ ДАННЫЕ
+            ========================= */
+            const allEventsData = [
+                {
+                    id: 'event-portfolio-review-20241129',
+                    title: 'Открытое портфолио ревью',
+                    date: '2024-11-29',
+                    time: '18:00',
+                    description: 'Приглашаем на открытое портфолио ревью, где каждый сможет получить ценную обратную связь от опытных архитекторов и дизайнеров.',
+                    summary: 'Возможность получить ценную обратную связь по вашему архитектурному или дизайнерскому портфолио от экспертов.',
+                    poster_large: 'images/announcements/portfolio-review-20241129.jpg',
+                    poster_small: 'images/announcements/portfolio-review-20241129.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-intro-illumica-20241213',
+                    title: 'Знакомство с бюро Иллюмика',
+                    date: '2024-12-13',
+                    time: '17:20',
+                    description: 'Приглашаем на встречу с представителями архитектурного бюро Иллюмика. Узнайте о их проектах, философии дизайна и возможностях для молодых специалистов.',
+                    summary: 'Встреча с архитектурным бюро Иллюмика: проекты, философия, возможности для молодых специалистов.',
+                    poster_large: 'images/announcements/intro-illumica-20241213.jpg',
+                    poster_small: 'images/announcements/intro-illumica-20241213.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-lecture-pik-20250328',
+                    title: 'Лекция от ПИК',
+                    date: '2025-03-28',
+                    time: '17:20',
+                    description: 'Представляем эксклюзивную лекцию от ведущих специалистов компании ПИК. Обсудим актуальные тренды в девелопменте и инновационные подходы к проектированию жилых комплексов.',
+                    summary: 'Актуальные тренды в девелопменте и инновационные подходы к проектированию от компании ПИК.',
+                    poster_large: 'images/announcements/lecture-pik-20250328.jpg',
+                    poster_small: 'images/announcements/lecture-pik-20250328.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-arch-moscow-stand-20250524',
+                    title: 'Рассказ о стенде на АРХ Москва',
+                    date: '2025-05-24',
+                    time: '11:00',
+                    description: 'Присоединяйтесь к нам, чтобы узнать все подробности о нашем стенде на выставке АРХ Москва. Поделимся концепцией, процессом создания и самыми интересными моментами.',
+                    summary: 'Подробности о концепции и создании нашего выставочного стенда на АРХ Москва.',
+                    poster_large: 'images/announcements/arch-moscow-stand-20250524.jpg',
+                    poster_small: 'images/announcements/arch-moscow-stand-20250524.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-pasta-bridges-20250908',
+                    title: 'Лекция-знакомство и воркшоп "Мосты из макарон"',
+                    date: '2025-09-08',
+                    time: '18:00',
+                    description: 'На этой увлекательной лекции мы погрузимся в основы инженерной мысли, а затем на практическом воркшопе попробуем построить настоящие мосты из макарон!',
+                    summary: 'Инженерная лекция и практический воркшоп по созданию и тестированию прочных мостов из макарон.',
+                    poster_large: 'images/announcements/pasta-bridges-20250908.jpg',
+                    poster_small: 'images/announcements/pasta-bridges-20250908.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-gdk-nizhny-novgorod-20250919',
+                    title: 'ГДК Нижний Новгород',
+                    date: '2025-09-19',
+                    time: '17:20',
+                    description: 'Приглашаем всех желающих принять участие в мероприятии "ГДК Нижний Новгород". Вас ждут интересные лекции, демонстрации и практические занятия по тематике городского развития и дизайна.',
+                    summary: 'Мероприятие "ГДК Нижний Новгород": лекции, демонстрации и практические занятия по городскому развитию.',
+                    poster_large: 'images/announcements/gdk-nizhny-novgorod-20250919.jpg',
+                    poster_small: 'images/announcements/gdk-nizhny-novgorod-20250919.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-visualization-zakharov-20251003',
+                    title: 'Лекция "Визуализация в архитектуре" с Ильёй Захаровым',
+                    date: '2025-10-03',
+                    time: '17:30',
+                    description: 'Илья Захаров, известный специалист по архитектурной визуализации, поделится секретами создания впечатляющих изображений и анимаций.',
+                    summary: 'Илья Захаров раскроет секреты создания впечатляющих архитектурных визуализаций.',
+                    poster_large: 'images/announcements/visualization-zakharov-20251003.jpg',
+                    poster_small: 'images/announcements/visualization-zakharov-20251003.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-smart-glass-20251006',
+                    title: 'Лекция "Умное стекло в современной архитектуре"',
+                    date: '2025-10-06',
+                    time: '16:00',
+                    description: 'Погрузитесь в мир инновационных технологий с лекцией о смарт-стекле. Мы рассмотрим последние разработки, принципы работы "умного" стекла и его применение.',
+                    summary: 'Исследование последних разработок и применения "умного" стекла в архитектурном дизайне.',
+                    poster_large: 'images/announcements/smart-glass-20251006.jpg',
+                    poster_small: 'images/announcements/smart-glass-20251006.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-light-industrial-20251114',
+                    title: 'Воркшоп "Light Industrial Design"',
+                    date: '2025-11-14',
+                    time: '11:00',
+                    description: 'Практический воркшоп, посвященный легкому индустриальному дизайну. Изучим принципы создания функциональных и эстетичных объектов в этом стиле.',
+                    summary: 'Практическое изучение принципов легкого индустриального дизайна и создание объектов.',
+                    poster_large: 'images/announcements/light-industrial-20251114.jpg',
+                    poster_small: 'images/announcements/light-industrial-20251114.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-intro-core-20251120',
+                    title: 'Знакомство с архитектурным бюро Core',
+                    date: '2025-11-20',
+                    time: '18:30',
+                    description: 'Приглашаем на эксклюзивную встречу с командой архитектурного бюро Core. Узнайте о их знаковых проектах, инновационных подходах к дизайну и возможностях для стажировки.',
+                    summary: 'Встреча с командой бюро Core: обзор проектов, философия и возможности для молодых архитекторов.',
+                    poster_large: 'images/announcements/intro-core-20251120.jpg',
+                    poster_small: 'images/announcements/intro-core-20251120.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-portfolio-review-20251128',
+                    title: 'Открытое портфолио ревью',
+                    date: '2025-11-28',
+                    time: '17:30',
+                    description: 'Второй раунд открытого портфолио ревью! Получите свежий взгляд на свои работы и конструктивную критику от ведущих специалистов отрасли.',
+                    summary: 'Второй раунд портфолио ревью с экспертами для улучшения ваших работ.',
+                    poster_large: 'images/announcements/portfolio-review-20251128.jpg',
+                    poster_small: 'images/announcements/portfolio-review-20251128.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-ai-architecture-20251211',
+                    title: 'Лекция "Нейросети в архитектуре: инструменты будущего"',
+                    date: '2025-12-11',
+                    time: '17:30',
+                    description: 'Исследуем, как нейросети и искусственный интеллект меняют процесс архитектурного проектирования. От генеративного дизайна до оптимизации рабочих процессов.',
+                    summary: 'Как нейросети и ИИ меняют архитектурное проектирование: от генеративного дизайна до оптимизации.',
+                    poster_large: 'images/announcements/ai-architecture-20251211.jpg',
+                    poster_small: 'images/announcements/ai-architecture-20251211.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-tour-core-20251216',
+                    title: 'Экскурсия в архитектурное бюро Core',
+                    date: '2025-12-16',
+                    time: '18:30',
+                    description: 'Уникальная возможность заглянуть за кулисы работы одного из ведущих архитектурных бюро — Core. Мы посетим их офис и познакомимся с проектами.',
+                    summary: 'Уникальная возможность посетить офис бюро Core и узнать о процессе их работы изнутри.',
+                    poster_large: 'images/announcements/tour-core-20251216.jpg',
+                    poster_small: 'images/announcements/tour-core-20251216.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-internship-renzo-piano-20260113',
+                    title: 'Лекция "Опыт стажировки в Renzo Piano Building Workshop"',
+                    date: '2026-01-13',
+                    time: '13:00',
+                    description: 'Приглашаем на лекцию, где бывший стажер Renzo Piano Building Workshop поделится своим уникальным опытом работы в одной из самых престижных архитектурных студий мира.',
+                    summary: 'Уникальный опыт стажировки в Renzo Piano Building Workshop: вызовы, открытия и знания.',
+                    poster_large: 'images/announcements/internship-renzo-piano-20260113.jpg',
+                    poster_small: 'images/announcements/internship-renzo-piano-20260113.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-internship-kengo-kuma-20260305',
+                    title: 'Лекция "Опыт стажировки в Kengo Kuma and Associates"',
+                    date: '2026-03-05',
+                    time: '18:30',
+                    description: 'Погрузитесь в философию японской архитектуры с рассказом о стажировке в Kengo Kuma and Associates. Узнайте о подходах к работе с натуральными материалами, светом и пространством.',
+                    summary: 'Рассказ о стажировке в Kengo Kuma and Associates: японская философия и работа с материалами.',
+                    poster_large: 'images/announcements/internship-kengo-kuma-20260305.jpg',
+                    poster_small: 'images/announcements/internship-kengo-kuma-20260305.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-intro-above-nowadays-ind-20260403',
+                    title: 'Знакомство с бюро Above, Nowadays, IND Architects',
+                    date: '2026-04-03',
+                    time: '19:00',
+                    description: 'Встреча с представителями трех ярких архитектурных бюро: Above, Nowadays и IND Architects. Узнайте о их разнообразных проектах и творческих подходах.',
+                    summary: 'Три архитектурных бюро — Above, Nowadays, IND Architects — поделятся проектами и опытом.',
+                    poster_large: 'images/announcements/intro-above-nowadays-ind-20260403.jpg',
+                    poster_small: 'images/announcements/intro-above-nowadays-ind-20260403.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-intro-megabudka-wowhaus-nefa-20260416',
+                    title: 'Знакомство с бюро Megabudka, Wowhaus, Nefa Architects',
+                    date: '2026-04-16',
+                    time: '19:00',
+                    description: 'Масштабная лекция-знакомство с флагманами российской архитектуры: Megabudka, Wowhaus и Nefa Architects. Обсудим их знаковые проекты и вклад в развитие городской среды.',
+                    summary: 'Масштабная встреча с лидерами российской архитектуры: Megabudka, Wowhaus, Nefa Architects.',
+                    poster_large: 'images/announcements/intro-megabudka-wowhaus-nefa-20260416.jpg',
+                    poster_small: 'images/announcements/intro-megabudka-wowhaus-nefa-20260416.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-arch-music-performance-20260418',
+                    title: 'Архитектурно-музыкальный перфоманс',
+                    date: '2026-04-18',
+                    time: '20:00',
+                    description: 'Уникальное событие на стыке двух искусств: архитектуры и музыки. Приглашаем на завораживающий перфоманс, где звуки и визуальные образы сольются в единое целое.',
+                    summary: 'Уникальный перфоманс, где архитектурные визуализации и музыкальное сопровождение создадут синергию искусств.',
+                    poster_large: 'images/announcements/arch-music-performance-20260418.jpg',
+                    poster_small: 'images/announcements/arch-music-performance-20260418.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-intro-karlson-core-atrium-20260430',
+                    title: 'Знакомство с бюро Олега Карлсона, Core, Atrium',
+                    date: '2026-04-30',
+                    time: '19:00',
+                    description: 'Встреча с выдающимися архитекторами из бюро Олега Карлсона, Core и Atrium. Обсудим их проекты и подходы к проектированию — от жилых комплексов до общественных пространств.',
+                    summary: 'Три ведущих бюро — Олега Карлсона, Core, Atrium — поделятся опытом и проектами.',
+                    poster_large: 'images/announcements/intro-karlson-core-atrium-20260430.jpg',
+                    poster_small: 'images/announcements/intro-karlson-core-atrium-20260430.jpg',
+                    link: '#'
+                },
+                {
+                    id: 'event-intro-kamen-clp-ginzburg-20260515',
+                    title: 'Знакомство с бюро парсек, CLP, Гинзбург',
+                    date: '2026-05-15',
+                    time: '19:00',
+                    description: 'Приглашаем на заключительную встречу из цикла знакомств с ведущими архитектурными бюро. В этот раз мы погрузимся в мир проектов парсек, CLP и Гинзбург.',
+                    summary: 'Заключительная встреча цикла: бюро парсек, CLP, Гинзбург представят свои проекты и подходы.',
+                    poster_large: 'images/announcements/intro-kamen-clp-ginzburg-20260515.jpg',
+                    poster_small: 'images/announcements/intro-kamen-clp-ginzburg-20260515.jpg',
+                    link: '#'
+                }
+            ];
+
+            /* =========================
+               РАБОТА С ДАТАМИ
+            ========================= */
+            function parseEventDate(event) {
+                return new Date(`${event.date}T${event.time}:00`);
+            }
+
+            function formatDate(dateObj) {
+                return dateObj.toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+
+            /* =========================
+               РАЗДЕЛЕНИЕ СОБЫТИЙ
+            ========================= */
+            function categorizeEvents(events) {
+                const now = new Date();
+                const upcoming = [];
+                const past = [];
+
+                events.forEach(event => {
+                    const eventDateTime = parseEventDate(event);
+                    if (eventDateTime > now) {
+                        upcoming.push(event);
+                    } else {
+                        past.push(event);
+                    }
+                });
+
+                upcoming.sort((a, b) => parseEventDate(a) - parseEventDate(b));
+                past.sort((a, b) => parseEventDate(b) - parseEventDate(a));
+
+                return {
+                    currentEvent: upcoming[0] || null,
+                    nextEvent: upcoming[1] || null,
+                    previousEvents: past
+                };
+            }
+
+            /* =========================
+               ТЕКУЩЕЕ МЕРОПРИЯТИЕ
+            ========================= */
+            function renderCurrentEvent(event) {
+                if (!event) return '';
+                const eventDateTime = parseEventDate(event);
+
+                return `
+                    <div class="current-event-card">
+                        <div class="current-event-poster">
+                            <img src="${event.poster_large}" alt="Постер мероприятия">
+                        </div>
+                        <div class="current-event-details">
+                            <h2>${event.title}</h2>
+                            <p class="event-date-time">
+                                <span class="date">${formatDate(eventDateTime)}</span>
+                                <span class="time">${event.time} МСК</span>
+                            </p>
+                            <p class="event-description">${event.description}</p>
+                            <a href="${event.link}" class="register-button">Зарегистрироваться</a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            /* =========================
+               СЛЕДУЮЩЕЕ МЕРОПРИЯТИЕ
+            ========================= */
+            function renderNextEvent(event) {
+                if (!event) return '';
+
+                return `
+                    <h3>Запланированное</h3>
+                    <div class="next-event-poster">
+                        <img src="${event.poster_small}" alt="Постер следующего мероприятия">
+                    </div>
+                    <div class="next-event-details">
+                        <h4>${event.title}</h4>
+                    </div>
+                `;
+            }
+
+            /* =========================
+               АККОРДЕОН ITEM
+            ========================= */
+            function renderAccordionItem(event, isOpen = false) {
+                const eventDateTime = parseEventDate(event);
+
+                return `
+                    <div class="accordion-item" id="event-${event.id}">
+                        <button class="accordion-header ${isOpen ? 'active' : ''}">
+                            <span class="event-title">${event.title}</span>
+                            <span class="event-date">${formatDate(eventDateTime)}</span>
+                        </button>
+                        <div class="accordion-content ${isOpen ? 'active' : ''}">
+                            <div class="event-content-wrapper">
+                                <div class="event-image-small">
+                                    <img src="${event.poster_small}" alt="Постер мероприятия">
+                                </div>
+                                <div class="event-text-wrapper">
+                                    <p class="event-summary">${event.summary}</p>
+                                    <a href="${event.link}" class="read-more">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            /* =========================
+               ОТРИСОВКА ВСЕХ СЕКЦИЙ
+            ========================= */
+            function renderAnnouncements() {
+                const { currentEvent, nextEvent, previousEvents } = categorizeEvents(allEventsData);
+
+                const currentSection = document.getElementById('current-event-section-dynamic');
+                const nextSection = document.getElementById('next-event-section-dynamic');
+                const accordion = document.getElementById('accordion-dynamic');
+                const prevTitle = document.querySelector('.previous-events-section .section-title');
+
+                currentSection.innerHTML = '';
+                currentSection.style.display = 'none';
+
+                nextSection.innerHTML = '';
+                nextSection.style.display = 'none';
+
+                accordion.innerHTML = '';
+                prevTitle.style.display = 'none';
+
+                if (currentEvent) {
+                    currentSection.innerHTML = renderCurrentEvent(currentEvent);
+                    currentSection.style.display = 'flex';
+                }
+
+                if (nextEvent) {
+                    nextSection.innerHTML = renderNextEvent(nextEvent);
+                    nextSection.style.display = 'flex';
+                }
+
+                if (previousEvents.length > 0) {
+                    prevTitle.style.display = 'block';
+                    previousEvents.forEach((event, index) => {
+                        accordion.innerHTML += renderAccordionItem(event, index === 0);
+                    });
+                }
+
+                initAccordionListeners();
+            }
+
+            function initAccordionListeners() {
+                document.querySelectorAll('.accordion-header').forEach(header => {
+                    header.addEventListener('click', toggleAccordion);
+                });
+            }
+
+            function toggleAccordion(event) {
+                const header = event.currentTarget;
+
+                document.querySelectorAll('.accordion-header.active').forEach(h => {
+                    if (h !== header) {
+                        h.classList.remove('active');
+                        h.nextElementSibling.classList.remove('active');
+                    }
+                });
+
+                header.classList.toggle('active');
+                header.nextElementSibling.classList.toggle('active');
+            }
+
+            /* =========================
+               КУРСОР
+            ========================= */
+            const circle = document.getElementById('circle');
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+
+            function updatePointerPosition(clientX, clientY) {
+                mouseX = clientX;
+                mouseY = clientY;
+                if (circle) {
+                    circle.style.transform = `translate(calc(${mouseX}px - 50%), calc(${mouseY}px - 50%))`;
+                }
+            }
+
+            document.addEventListener('mousemove', (e) => updatePointerPosition(e.clientX, e.clientY));
+            document.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    updatePointerPosition(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            }, { passive: true });
+
+            /* =========================
+               ФИГУРКИ (ПЕРСОНАЖИ)
+            ========================= */
+            const fog = document.getElementById('fog');
+            if (fog) fog.classList.add('waking-up');
+
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            const figureImageFiles = [
+                'images/hero1.png', 'images/hero2.png', 'images/hero3.png',
+                'images/hero4.png', 'images/hero5.png', 'images/hero6.png',
+                'images/hero7.png', 'images/hero8.png'
+            ];
+
+            // На мобильных рисуем только 5 фигурок для сохранения GPU
+            const activeFiles = isMobile ? figureImageFiles.slice(0, 5) : figureImageFiles;
+            const figures = [];
+
+            for (let i = 0; i < activeFiles.length; i++) {
+                const imgFileName = activeFiles[i];
+                const imgCode = `<img src="${imgFileName}" alt="fig" loading="lazy">`;
+
+                let el = document.createElement('div');
+                el.className = 'figure';
+                el.innerHTML = imgCode;
+                document.body.appendChild(el);
+
+                let size = 25 + Math.random() * 20;
+                el.style.width = size + 'px'; el.style.height = size + 'px';
+                let baseOpacity = 0.5 + Math.random() * 0.5;
+                el.style.opacity = baseOpacity;
+
+                figures.push({
+                    element: el,
+                    x: Math.random() * window.innerWidth + window.scrollX,
+                    y: Math.random() * window.innerHeight + window.scrollY,
+                    offsetX: (Math.random() - 0.5) * 40,
+                    offsetY: (Math.random() - 0.5) * 40,
+                    speed: 0.03 + Math.random() * 0.03,
+                    jumpPhase: Math.random() * Math.PI * 2,
+                    state: 'follow',
+                    dropX: 0,
+                    dropY: 0,
+                    baseOpacity: baseOpacity,
+                    direction: 1
+                });
+            }
+
+            function handleDropInteraction(clientX, clientY, target) {
+                if (target.closest('a, button, .accordion-item, .accordion-header, .mobile-menu-toggle, nav.top-menu, .current-event-card, .next-event-section')) {
+                    return;
+                }
+                let followers = figures.filter(f => f.state === 'follow');
+                if (followers.length > 0) {
+                    let randomFig = followers[Math.floor(Math.random() * followers.length)];
+                    randomFig.state = 'dropped';
+                    randomFig.dropX = clientX + window.scrollX;
+                    randomFig.dropY = clientY + window.scrollY;
+                    randomFig.element.style.opacity = 1;
+                    setTimeout(() => {
+                        randomFig.state = 'follow';
+                        randomFig.element.style.opacity = randomFig.baseOpacity;
+                    }, 4000 + Math.random() * 2000);
+                }
+            }
+
+            document.addEventListener('mousedown', (e) => handleDropInteraction(e.clientX, e.clientY, e.target));
+
+            /* =========================
+               АНИМАЦИОННЫЙ ЦИКЛ
+            ========================= */
+            let clusterX = mouseX + window.scrollX;
+            let clusterY = mouseY + window.scrollY;
+            let time = 0;
+
+            // Visibility API: останавливает анимацию при неактивной вкладке (экономия батареи)
+            let rafId = null;
+            let isTabVisible = true;
+            document.addEventListener('visibilitychange', () => {
+                isTabVisible = document.visibilityState === 'visible';
+                if (isTabVisible && rafId === null) {
+                    rafId = requestAnimationFrame(animate);
+                }
+            });
+
+            function animate() {
+                time += 0.08;
+
+                let targetClusterX = mouseX + window.scrollX;
+                let targetClusterY = mouseY + window.scrollY;
+
+                let dx = targetClusterX - clusterX;
+                let dy = targetClusterY - clusterY;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist > 0) {
+                    const clusterOffset = 35;
+                    clusterX += (targetClusterX - (dx / dist) * clusterOffset - clusterX) * 0.4;
+                    clusterY += (targetClusterY - (dy / dist) * clusterOffset - clusterY) * 0.4;
+                }
+
+                figures.forEach(fig => {
+                    let oldX = fig.x;
+
+                    if (fig.state === 'follow') {
+                        let targetFigX = clusterX + fig.offsetX;
+                        let targetFigY = clusterY + fig.offsetY;
+                        fig.x += (targetFigX - fig.x) * fig.speed;
+                        fig.y += (targetFigY - fig.y) * fig.speed;
+
+                        fig.element.style.position = 'fixed';
+                        let viewportX = fig.x - window.scrollX;
+                        let viewportY = fig.y - window.scrollY;
+
+                        // Деликатное покачивание 4px вместо 25px
+                        let bounceY = (!prefersReducedMotion) ? Math.sin(time + fig.jumpPhase) * 4 : 0;
+                        fig.element.style.transform = `translate(calc(${viewportX}px - 50%), calc(${viewportY + bounceY}px - 50%)) scaleX(${fig.direction})`;
+
+                    } else {
+                        let targetFigX = fig.dropX;
+                        let targetFigY = fig.dropY;
+                        fig.x += (targetFigX - fig.x) * fig.speed;
+                        fig.y += (targetFigY - fig.y) * fig.speed;
+
+                        fig.element.style.position = 'absolute';
+                        fig.element.style.transform = `translate(calc(${fig.x}px - 50%), calc(${fig.y}px - 50%)) scaleX(${fig.direction})`;
+                    }
+
+                    let deltaX = fig.x - oldX;
+                    if (Math.abs(deltaX) > 0.3) fig.direction = deltaX > 0 ? 1 : -1;
+                });
+
+                rafId = requestAnimationFrame(animate);
+            }
+
+            rafId = requestAnimationFrame(animate);
+
+            /* =========================
+               ЗАПУСК
+            ========================= */
+            renderAnnouncements();
+        });
+    </script>
+</body>
+</html>
